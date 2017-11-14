@@ -6,9 +6,7 @@ PixiJS — The HTML5 Creation Engine
 [![Inline docs](http://inch-ci.org/github/pixijs/pixi.js.svg?branch=dev)](http://inch-ci.org/github/pixijs/pixi.js)
 [![Build Status](https://travis-ci.org/pixijs/pixi.js.svg?branch=dev)](https://travis-ci.org/pixijs/pixi.js)
 
-The aim of this project is to provide a fast lightweight 2D library that works
-across all devices. The PixiJS renderer allows everyone to enjoy the power of
-hardware acceleration without prior knowledge of WebGL. Also, it's fast. Really fast.
+开发本产品的目的是为了让所有设备上都能运行的一个轻量化的、快速的2D引擎库。PixiJS渲染器让所有人都能在不用了解WebGL知识的情况下体验硬件加速的快感。而且，它很快，真的真快。
 
 If you want to keep up to date with the latest PixiJS news then feel free to follow us on twitter
 ([@doormat23](https://twitter.com/doormat23), [@rolnaaba](https://twitter.com/rolnaaba), [@bigtimebuddy](https://twitter.com/bigtimebuddy), [@ivanpopelyshev](https://twitter.com/ivanpopelyshev))
@@ -17,28 +15,28 @@ as any breakthroughs will be posted up there too!
 
 **Your support helps us make PixiJS even better. Make your pledge on [Patreon](https://www.patreon.com/user?u=2384552&ty=h&u=2384552) and we'll love you forever!**
 
-### What to Use PixiJS for and When to Use It
+### 为什么用PixiJS和什么时候用它
 
-PixiJS is a rendering library that will allow you to create rich, interactive graphics, cross platform applications, and games without having to dive into the WebGL API or deal with browser and device compatibility.
+PixiJS是一个让你充满创造性的、交互式的视图操作的、跨平台的、更是不用考虑设备兼容性以及深入学习WebGL的渲染库。
 
-PixiJS has full [WebGL](https://en.wikipedia.org/wiki/WebGL) support and seamlessly falls back to HTML5's [canvas](https://en.wikipedia.org/wiki/Canvas_element) if needed. As a framework, PixiJS is a fantastic tool for authoring interactive content, *especially with the move away from Adobe Flash in recent years*. Use it for your graphics rich, interactive websites, applications, and HTML5 games.  Out of the box cross-platform compatibility and graceful degradation mean you have less work to do and have more fun doing it! If you want to create polished and refined experiences relatively quickly, without delving into dense, low level code, all while avoiding the headaches of browser inconsistencies, then sprinkle your next project with some PixiJS magic!
+PixiJS完全支持[WebGL](https://en.wikipedia.org/wiki/WebGL) ，而且如果需要的话可以无缝降级为HTML5的[canvas](https://en.wikipedia.org/wiki/Canvas_element) 。作为一个框架，PixiJS将会是交互设计师特别是近期从Adobe Flash转过来的好帮手。你可以用它来制作动画场景、交互网站、应用程序和HTML5的游戏等。没有了跨平台兼容性的问题和降级问题的困扰，你会更加享受这个开发过程。如果你想要创造流畅精确的交互体验、不去管繁重的api和底层的代码、以及避开所有浏览器带来的问题的话，你需要给你的下一个项目施一点PixiJS魔法！
 
 **Boost your development and feel free to use your imagination!**
 
-### Learn ###
-- Website: Find out more about PixiJS on the [offical website](http://www.pixijs.com/).
-- Getting started: Check out @kittykatattack's comprehensive [tutorial](https://github.com/kittykatattack/learningPixi).
-- Examples: Get stuck right in and play around with PixiJS code and features right [here](http://pixijs.github.io/examples/)!
-- Docs: Get to know the PixiJS API by checking out the [docs](https://pixijs.github.io/docs/).
+### 学习 ###
+- 网站: 更多关于PixiJS [官网](http://www.pixijs.com/).
+- 如何开始: 访问@kittykatattack的综合[教程](https://github.com/kittykatattack/learningPixi).
+- 示例: 找到玩转PixiJS的正确切入点[demo](http://pixijs.github.io/examples/)!
+- 文档: 查看PixiJS的API[文档](https://pixijs.github.io/docs/).
 - Wiki: Other misc tutorials and resources are [on the Wiki](https://github.com/pixijs/pixi.js/wiki).
 
-### Community ###
+### 社区 ###
 - Forums: Check out the [forum](http://www.html5gamedevs.com/forum/15-pixijs/) and [Stackoverflow](http://stackoverflow.com/search?q=pixi.js), both friendly places to ask your pixi questions.
 - Inspiration: Check out the [gallery](http://www.pixijs.com/gallery) to see some of the amazing things people have created!
 - Chat: You can join us on [Gitter](https://gitter.im/pixijs/pixi.js) To chat about PixiJS. We also now have a Slack channel. If you would like to join it please Send me an email (mat@goodboydigital.com) and I will invite you in.
 
 
-### Setup ###
+### 组织 ###
 
 It's easy to get started with PixiJS! Simply download a [prebuilt build](https://github.com/pixijs/pixi.js/wiki/FAQs#where-can-i-get-a-build)!
 
@@ -46,19 +44,19 @@ Alternatively, PixiJS can be installed with [npm](https://docs.npmjs.com/getting
 
 _Note: After v4.5.0, support for the [Bower](https://bower.io) package manager has been dropped. Please see the [release notes](https://github.com/pixijs/pixi.js/releases/tag/v4.5.0) for more information._
 
-#### NPM Install
+#### NPM 安装
 
 ```
 $> npm install pixi.js
 ```
 
-#### CDN Install (via cdnjs)
+#### CDN 安装 (via cdnjs)
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
 ```
 
-_Note: `4.5.1` can be replaced by any [released](https://github.com/pixijs/pixi.js/releases) version._
+_注意: `4.5.1` 可被替换为任何[版本](https://github.com/pixijs/pixi.js/releases) ._
 
 ### Demos ###
 
@@ -79,7 +77,7 @@ _Note: `4.5.1` can be replaced by any [released](https://github.com/pixijs/pixi.
 Thanks to [@photonstorm](https://twitter.com/photonstorm) for providing
 those last 2 examples and allowing us to share the source code :)
 
-### Contribute ###
+### 捐献 ###
 
 Want to be part of the PixiJS project? Great! All are welcome! We will get there quicker
 together :) Whether you find a bug, have a great feature request or you fancy owning a task
@@ -88,7 +86,7 @@ from the road map above feel free to get in touch.
 Make sure to read the [Contributing Guide](https://github.com/pixijs/pixi.js/blob/master/CONTRIBUTING.md)
 before submitting changes.
 
-### Current features ###
+### 新特性 ###
 
 - WebGL renderer (with automatic smart batching allowing for REALLY fast performance)
 - Canvas renderer (Fastest in town!)
@@ -107,7 +105,7 @@ before submitting changes.
 - Filters
 - [User Plugins](https://github.com/pixijs/pixi.js/wiki/v3-Pixi-Plugins)
 
-### Basic Usage Example ###
+### 基础用法示例 ###
 
 ```js
 // The application will create a renderer using WebGL, if possible,
@@ -144,49 +142,45 @@ PIXI.loader.add('bunny', 'bunny.png').load(function(loader, resources) {
 });
 ```
 
-### How to build ###
+### 如何构建 ###
 
-Note that for most users you don't need to build this project. If all you want is to use PixiJS, then
-just download one of our [prebuilt releases](https://github.com/pixijs/pixi.js/releases). Really
-the only time you should need to build PixiJS is if you are developing it.
-
-If you don't already have Node.js and NPM, go install them. Then, in the folder where you have cloned
-the repository, install the build dependencies using npm:
+需要注意的是对于大多数用户来说不需要构建，如果你想要的仅仅是使用PixiJS的话，直接下载已经构建好的[版本](https://github.com/pixijs/pixi.js/releases)就可以。
+你只有在开发它的时候才需要构建它。
+如果你没有Node.js和NPM，请安装，然后用NPM在克隆目录安装和构建依赖：
 
 ```
 $> npm install
 ```
 
-Then, to build the source, run:
+然后，构建源码，运行：
 
 ```
 $> npm run dist
 ```
 
-This will create a minified version at `dist/pixi.min.js` and a non-minified version at `dist/pixi.js`
-with all the plugins in the PixiJS project.
+这样会产生带有全插件的压缩的版本`dist/pixi.min.js` ，还有一个未压缩的版本`dist/pixi.js`
 
-If there are specific plugins you don't want, say "interaction" or "extras", you can exclude those:
+如果有个别插件你不想要的话，加入命令"interaction"、 "extras"
 
 ```
 $> npm run dist -- --exclude extras --exclude interaction
 ```
 
-You can also use the short-form `-e`:
+简化版命令 `-e`:
 
 ```
 $> npm run dist -- -e extras -e interaction -e filters
 ```
 
-### How to generate the documentation ###
+### 如何生成文档 ###
 
-The docs can be generated using npm:
+生成文档命令:
 
 ```
 $> npm run docs
 ```
 
-The documentation uses [Jaguar.js](https://github.com/pixijs/jaguarjs-jsdoc) and the jsdoc format, the configuration file can be found at [scripts/jsdoc.conf.json](scripts/jsdoc.conf.json)
+文档使用 [Jaguar.js](https://github.com/pixijs/jaguarjs-jsdoc) 和jsdoc, 配置文件[scripts/jsdoc.conf.json](scripts/jsdoc.conf.json)
 
 ### License ###
 
