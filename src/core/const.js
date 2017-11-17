@@ -1,5 +1,5 @@
 /**
- * String of the current PIXI version.
+ * PIXI当前版本号。
  *
  * @static
  * @constant
@@ -10,7 +10,7 @@
 export const VERSION = __VERSION__;
 
 /**
- * Two Pi.
+ * 2π.
  *
  * @static
  * @constant
@@ -20,7 +20,7 @@ export const VERSION = __VERSION__;
 export const PI_2 = Math.PI * 2;
 
 /**
- * Conversion factor for converting radians to degrees.
+ * 弧度转角度的转换器。
  *
  * @static
  * @constant
@@ -30,7 +30,7 @@ export const PI_2 = Math.PI * 2;
 export const RAD_TO_DEG = 180 / Math.PI;
 
 /**
- * Conversion factor for converting degrees to radians.
+ * 角度转弧度的转换器。
  *
  * @static
  * @constant
@@ -40,7 +40,7 @@ export const RAD_TO_DEG = 180 / Math.PI;
 export const DEG_TO_RAD = Math.PI / 180;
 
 /**
- * Constant to identify the Renderer Type.
+ * 渲染器类型常量。
  *
  * @static
  * @constant
@@ -58,10 +58,10 @@ export const RENDERER_TYPE = {
 };
 
 /**
- * Various blend modes supported by PIXI.
+ * PIXI支持的各种混合方式。
  *
- * IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes.
- * Anything else will silently act like NORMAL.
+ * 注意 - WebGL只支持NORMAL, ADD, MULTIPLY, SCREEN几种混合模式.
+ * 其他任何模式都默认NORMAL.
  *
  * @static
  * @constant
@@ -110,8 +110,7 @@ export const BLEND_MODES = {
 };
 
 /**
- * Various webgl draw modes. These can be used to specify which GL drawMode to use
- * under certain situations and renderers.
+ * 多种WebGL绘图模式。用来列举在确定的渲染模式下都哪些绘图模式可以使用。
  *
  * @static
  * @constant

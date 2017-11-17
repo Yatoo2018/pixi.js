@@ -21,7 +21,7 @@ import { utils } from './core';
 utils.mixins.performMixins();
 
 /**
- * Alias for {@link PIXI.loaders.shared}.
+ * {@link PIXI.loaders.shared}的别名。
  * @name loader
  * @memberof PIXI
  * @type {PIXI.loader.Loader}

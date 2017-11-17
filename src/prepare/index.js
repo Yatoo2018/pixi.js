@@ -1,9 +1,9 @@
 /**
- * The prepare namespace provides renderer-specific plugins for pre-rendering DisplayObjects. These plugins are useful for
- * asynchronously preparing assets, textures, graphics waiting to be displayed.
+ * 命名空间prepare为预渲染显示对象提供了特殊的渲染器插件，这些插件可以异步的加载需要加载的资源、纹理、图像等。
  *
- * Do not instantiate these plugins directly. It is available from the `renderer.plugins` property.
- * See {@link PIXI.CanvasRenderer#plugins} or {@link PIXI.WebGLRenderer#plugins}.
+ * 不要直接实例化这些插件，你可以在`renderer.plugins`属性中找到它们。
+ *
+ * 请看{@link PIXI.CanvasRenderer#plugins}或者{@link PIXI.WebGLRenderer#plugins}。
  * @example
  * // Create a new application
  * const app = new PIXI.Application();

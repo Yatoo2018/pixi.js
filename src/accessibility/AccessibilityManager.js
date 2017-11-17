@@ -21,14 +21,11 @@ const DIV_HOOK_POS_Y = -1000;
 const DIV_HOOK_ZINDEX = 2;
 
 /**
- * The Accessibility manager recreates the ability to tab and have content read by screen
- * readers. This is very important as it can possibly help people with disabilities access pixi
- * content.
+ * 访问管理器重建了屏幕呈现标签和内容的能力，这点对于那些没办法看到pixi内容的用户来说非常重要。
  *
- * Much like interaction any DisplayObject can be made accessible. This manager will map the
- * events as if the mouse was being used, minimizing the effort required to implement.
+ * 让任何显示对象都能具有更强的交互性，管理器已最小的代价模拟鼠标的使用。
  *
- * An instance of this class is automatically created by default, and can be found at renderer.plugins.accessibility
+ * 此类的示例将会被自动化的创建，你可以在`renderer.plugins.accessibility`中找到它。
  *
  * @class
  * @memberof PIXI.accessibility
@@ -36,7 +33,7 @@ const DIV_HOOK_ZINDEX = 2;
 export default class AccessibilityManager
 {
     /**
-     * @param {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - A reference to the current renderer
+     * @param {PIXI.CanvasRenderer|PIXI.WebGLRenderer} 渲染器 - 当前使用的渲染器
      */
     constructor(renderer)
     {
@@ -56,7 +53,7 @@ export default class AccessibilityManager
         div.style.zIndex = DIV_TOUCH_ZINDEX;
 
         /**
-         * This is the dom element that will sit over the PixiJS element. This is where the div overlays will go.
+         * 这是位于`PixiJS`元素之上的dom元素，也就是div将会叠在的地方。
          *
          * @type {HTMLElement}
          * @private
@@ -64,7 +61,7 @@ export default class AccessibilityManager
         this.div = div;
 
         /**
-         * A simple pool for storing divs.
+         * 储存div的数组
          *
          * @type {*}
          * @private
@@ -72,6 +69,8 @@ export default class AccessibilityManager
         this.pool = [];
 
         /**
+         *
+         *
          * This is a tick used to check if an object is no longer being rendered.
          *
          * @type {Number}

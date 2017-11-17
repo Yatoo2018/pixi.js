@@ -1,9 +1,8 @@
 /**
- * This namespace contains a renderer plugin for interaction accessibility for end-users
- * with physical impairments which require screen-renders, keyboard navigation, etc.
+ * 这个命名空间包含了终端用户的一些物理互动性的渲染器插件，比如屏幕呈现、键盘导航等等。
  *
- * Do not instantiate this plugin directly. It is available from the `renderer.plugins` property.
- * See {@link PIXI.CanvasRenderer#plugins} or {@link PIXI.WebGLRenderer#plugins}.
+ * 不要直接实例化这个插件，它已经包含在`renderer.plugins`属性中了。
+ * 请看 {@link PIXI.CanvasRenderer#plugins} 或者{@link PIXI.WebGLRenderer#plugins}.
  * @namespace PIXI.accessibility
  */
 export { default as accessibleTarget } from './accessibleTarget';
