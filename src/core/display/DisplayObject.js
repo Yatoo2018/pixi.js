@@ -1,15 +1,16 @@
 import EventEmitter from 'eventemitter3';
-import { TRANSFORM_MODE } from '../const';
+import {TRANSFORM_MODE} from '../const';
 import settings from '../settings';
 import TransformStatic from './TransformStatic';
 import Transform from './Transform';
 import Bounds from './Bounds';
-import { Rectangle } from '../math';
+import {Rectangle} from '../math';
 // _tempDisplayObjectParent = new DisplayObject();
 
 /**
  * The base class for all objects that are rendered on the screen.
  * This is an abstract class and should not be used on its own rather it should be extended.
+ * 所有显示对象的基类
  *
  * @class
  * @extends EventEmitter
@@ -57,6 +58,7 @@ export default class DisplayObject extends EventEmitter
         /**
          * Can this object be rendered, if false the object will not be drawn but the updateTransform
          * methods will still be called.
+         * 该对象是否被能够被渲染，如果设置为false，该对象不被渲染，但是updateTransform方法依然会被执行
          *
          * Only affects recursive calls from parent. You can ask for bounds manually
          *
@@ -66,6 +68,7 @@ export default class DisplayObject extends EventEmitter
 
         /**
          * The display object container that contains this display object.
+         * 父容器
          *
          * @member {PIXI.Container}
          * @readonly
@@ -83,6 +86,7 @@ export default class DisplayObject extends EventEmitter
         /**
          * The area the filter is applied to. This is used as more of an optimisation
          * rather than figuring out the dimensions of the displayObject each frame you can set this rectangle
+         *
          *
          * Also works as an interaction mask
          *
@@ -168,6 +172,7 @@ export default class DisplayObject extends EventEmitter
     /**
      * recursively updates transform of all objects from the root to this one
      * internal function for toLocal()
+     * 递归更新从跟节点到当前的所有对象的 transform 属性
      */
     _recursivePostUpdateTransform()
     {
@@ -184,11 +189,16 @@ export default class DisplayObject extends EventEmitter
 
     /**
      * Retrieves the bounds of the displayObject as a rectangle object.
+     * 获取显示对象边框
      *
      * @param {boolean} skipUpdate - setting to true will stop the transforms of the scene graph from
      *  being updated. This means the calculation returned MAY be out of date BUT will give you a
      *  nice performance boost
+     *  设置为true，将跳过transform的更新，计算的结果可能过时了，但是能够提升性能
+     *
      * @param {PIXI.Rectangle} rect - Optional rectangle to store the result of the bounds calculation
+     * 可选，用来存储计算结果
+     *
      * @return {PIXI.Rectangle} the rectangular bounding area
      */
     getBounds(skipUpdate, rect)

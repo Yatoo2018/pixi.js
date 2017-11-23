@@ -154,6 +154,9 @@ export default class Matrix
     /**
      * Get a new position with the current transformation applied.
      * Can be used to go from a child's coordinate space to the world coordinate space. (e.g. rendering)
+     * 获取一个使用当前 Matrix 转换之后的点
+     * 可以用它来获取子坐标空间的点，在世界坐标空间的位置
+     * 参考 {PIXI.DisplayObject} property toGlobal
      *
      * @param {PIXI.Point} pos - The origin
      * @param {PIXI.Point} [newPos] - The point that the new position is assigned to (allowed to be same as input)
@@ -175,6 +178,9 @@ export default class Matrix
     /**
      * Get a new position with the inverse of the current transformation applied.
      * Can be used to go from the world coordinate space to a child's coordinate space. (e.g. input)
+     * 获取一个使用逆矩阵转换之后的点
+     * 可以用它来获取世界坐标空间中的点，在子坐标空间中的位置
+     * 参考 {PIXI.DisplayObject} property toLocal
      *
      * @param {PIXI.Point} pos - The origin
      * @param {PIXI.Point} [newPos] - The point that the new position is assigned to (allowed to be same as input)
@@ -197,6 +203,7 @@ export default class Matrix
 
     /**
      * Translates the matrix on the x and y.
+     * 位移
      *
      * @param {number} x How much to translate x by
      * @param {number} y How much to translate y by
@@ -212,6 +219,7 @@ export default class Matrix
 
     /**
      * Applies a scale transformation to the matrix.
+     * 缩放
      *
      * @param {number} x The amount to scale horizontally
      * @param {number} y The amount to scale vertically
@@ -223,6 +231,7 @@ export default class Matrix
         this.d *= y;
         this.c *= x;
         this.b *= y;
+        //??scale 为什么会影响tx和ty的值
         this.tx *= x;
         this.ty *= y;
 

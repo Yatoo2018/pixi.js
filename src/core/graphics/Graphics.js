@@ -20,6 +20,8 @@ const tempColor2 = new Float32Array(4);
  * The Graphics class contains methods used to draw primitive shapes such as lines, circles and
  * rectangles to the display, and to color and fill them.
  *
+ * Graphics类包含了绘制原始图像的方法
+ *
  * @class
  * @extends PIXI.Container
  * @memberof PIXI
@@ -230,6 +232,8 @@ export default class Graphics extends Container
     /**
      * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo()
      * method or the drawCircle() method.
+     *
+     * 为Graphics的方法指定线条样式，像lineTo()方法drawCircle()方法
      *
      * @param {number} [lineWidth=0] - width of the line to draw, will update the objects stored style
      * @param {number} [color=0] - color of the line to draw, will update the objects stored style

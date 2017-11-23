@@ -5,6 +5,8 @@ import DisplayObject from './DisplayObject';
  * A Container represents a collection of display objects.
  * It is the base class of all display objects that act as a container for other objects.
  *
+ * 一个显示对象容器，作为所有显示对象容器的基类
+ *
  *```js
  * let container = new PIXI.Container();
  * container.addChild(sprite);
@@ -25,6 +27,7 @@ export default class Container extends DisplayObject
 
         /**
          * The array of children of this container.
+         * 子对象
          *
          * @member {PIXI.DisplayObject[]}
          * @readonly

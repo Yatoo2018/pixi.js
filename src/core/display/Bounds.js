@@ -5,6 +5,8 @@ import { Rectangle } from '../math';
  * Axis-Aligned Bounding Box
  * It is not a shape! Its mutable thing, no 'EMPTY' or that kind of problems
  *
+ * 显示对象的矩形区域
+ *
  * @class
  * @memberof PIXI
  */
@@ -34,7 +36,7 @@ export default class Bounds
         this.maxX = -Infinity;
 
         /**
-         * @member {number}
+         * @member {number
          * @default 0
          */
         this.maxY = -Infinity;
