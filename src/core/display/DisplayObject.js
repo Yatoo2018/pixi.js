@@ -172,7 +172,7 @@ export default class DisplayObject extends EventEmitter
     /**
      * recursively updates transform of all objects from the root to this one
      * internal function for toLocal()
-     * 递归更新从跟节点到当前的所有对象的 transform 属性
+     * 递归更新从根节点到当前的所有对象的 transform 属性
      */
     _recursivePostUpdateTransform()
     {
@@ -364,9 +364,12 @@ export default class DisplayObject extends EventEmitter
 
     /**
      * Set the parent Container of this DisplayObject
+     * 设置显示对象的parent
      *
      * @param {PIXI.Container} container - The Container to add this DisplayObject to
+     * 容器
      * @return {PIXI.Container} The Container that this DisplayObject was added to
+     * 返回该容器
      */
     setParent(container)
     {
@@ -382,6 +385,7 @@ export default class DisplayObject extends EventEmitter
 
     /**
      * Convenience function to set the position, scale, skew and pivot at once.
+     * 方便设置position，scale，skew以及pivot
      *
      * @param {number} [x=0] - The X position
      * @param {number} [y=0] - The Y position
@@ -414,6 +418,9 @@ export default class DisplayObject extends EventEmitter
      * remove the display object from its parent Container as well as remove
      * all current event listeners and internal references. Do not use a DisplayObject
      * after calling `destroy`.
+     * 通用显示对象的基础destroy方法
+     * 将自动从父容器中移除，以及移除所有侦听事件和内部引用
+     * 不要在执行`destroy`之后使用该显示对象
      *
      */
     destroy()
@@ -574,6 +581,7 @@ export default class DisplayObject extends EventEmitter
 
     /**
      * Indicates if the object is globally visible.
+     * 声明是否全局显示
      *
      * @member {boolean}
      * @readonly
@@ -600,8 +608,14 @@ export default class DisplayObject extends EventEmitter
      * object to the shape of the mask applied to it. In PIXI a regular mask must be a
      * PIXI.Graphics or a PIXI.Sprite object. This allows for much faster masking in canvas as it
      * utilises shape clipping. To remove a mask, set this property to null.
+     * 设置显示对象的遮罩
+     * 遮罩设置一个shape来限制显示对象的显示区域
+     * 在PIXI一个规则的遮罩米需是一个PIXI.Graphics或者PIXI.Sprite对象
+     * 这会使你更快的利用shape做裁剪
+     * 要移除遮罩，只需将该值设置为null
      *
      * @todo For the moment, PIXI.CanvasRenderer doesn't support PIXI.Sprite as mask.
+     * 目前，PIXI.CanvasRenderer暂不支持PIXI.Sprite作为遮罩
      *
      * @member {PIXI.Graphics|PIXI.Sprite}
      */
@@ -629,6 +643,9 @@ export default class DisplayObject extends EventEmitter
      * Sets the filters for the displayObject.
      * * IMPORTANT: This is a webGL only feature and will be ignored by the canvas renderer.
      * To remove filters simply set this property to 'null'
+     * 设置显示对象滤镜
+     * 注意：这仅是WebGL的特性，在canvas渲染中将被忽略
+     * 可以通过设置为null来移除它
      *
      * @member {PIXI.Filter[]}
      */

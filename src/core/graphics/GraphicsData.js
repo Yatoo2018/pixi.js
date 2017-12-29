@@ -9,13 +9,21 @@ export default class GraphicsData
     /**
      *
      * @param {number} lineWidth - the width of the line to draw
+     * 线宽
      * @param {number} lineColor - the color of the line to draw
+     * 线的颜色
      * @param {number} lineAlpha - the alpha of the line to draw
+     * 线的透明度
      * @param {number} fillColor - the color of the fill
+     * 填充颜色
      * @param {number} fillAlpha - the alpha of the fill
+     * 填充的透明度
      * @param {boolean} fill - whether or not the shape is filled with a colour
+     * 是否该shape已经被填充了
      * @param {boolean} nativeLines - the method for drawing lines
+     * 绘制线条的方法
      * @param {PIXI.Circle|PIXI.Rectangle|PIXI.Ellipse|PIXI.Polygon} shape - The shape object to draw.
+     * 要绘制的形状
      */
     constructor(lineWidth, lineColor, lineAlpha, fillColor, fillAlpha, fill, nativeLines, shape)
     {

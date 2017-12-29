@@ -187,6 +187,10 @@ export default class Graphics extends Container
          * of the object in exchange for taking up texture memory. It is also useful if you need the graphics
          * object to be anti-aliased, because it will be rendered using canvas. This is not recommended if
          * you are constantly redrawing the graphics element.
+         * 当cacheAsBitmap设置为true，该图形对象将被当成一个sprite一样绘制
+         * 如果图形元素不是经常改变，这样做是非常有用的
+         * 这将占用更多的内存来提高渲染速度
+         * 如果你需要不停的重新渲染该图形对象，那么不推荐您这么做
          *
          * @name cacheAsBitmap
          * @member {boolean}
@@ -198,6 +202,8 @@ export default class Graphics extends Container
     /**
      * Creates a new Graphics object with the same values as this one.
      * Note that the only the properties of the object are cloned, not its transform (position,scale,etc)
+     * 使用相同的值创建一个新的图形对象
+     * 注意，仅属性被复制，transform不会被复制
      *
      * @return {PIXI.Graphics} A clone of the graphics object
      */
@@ -271,6 +277,7 @@ export default class Graphics extends Container
 
     /**
      * Moves the current drawing position to x, y.
+     * 移动当前绘制位置
      *
      * @param {number} x - the X coordinate to move to
      * @param {number} y - the Y coordinate to move to
@@ -289,6 +296,8 @@ export default class Graphics extends Container
     /**
      * Draws a line using the current line style from the current drawing position to (x, y);
      * The current drawing position is then set to (x, y).
+     * 从当前位置使用当前样式绘制线条
+     *
      *
      * @param {number} x - the X coordinate to draw to
      * @param {number} y - the Y coordinate to draw to
@@ -305,6 +314,7 @@ export default class Graphics extends Container
     /**
      * Calculate the points for a quadratic bezier curve and then draws it.
      * Based on: https://stackoverflow.com/questions/785097/how-do-i-implement-a-bezier-curve-in-c
+     * 二次曲线（抛物线）计算位置并绘制
      *
      * @param {number} cpX - Control point x
      * @param {number} cpY - Control point y
@@ -357,6 +367,7 @@ export default class Graphics extends Container
 
     /**
      * Calculate the points for a bezier curve and then draws it.
+     * 计算贝塞尔曲线上的点
      *
      * @param {number} cpX - Control point x
      * @param {number} cpY - Control point y
@@ -464,6 +475,7 @@ export default class Graphics extends Container
 
     /**
      * The arc method creates an arc/curve (used to create circles, or parts of circles).
+     * arc方法用来创建一段弧线
      *
      * @param {number} cx - The x-coordinate of the center of the circle
      * @param {number} cy - The y-coordinate of the center of the circle
@@ -1019,6 +1031,7 @@ export default class Graphics extends Container
 
     /**
      * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
+     * 绘制给定的图形。可以是Circle、Rectangle、Ellipse、Line、Polygon
      *
      * @param {PIXI.Circle|PIXI.Ellipse|PIXI.Polygon|PIXI.Rectangle|PIXI.RoundedRectangle} shape - The shape object to draw.
      * @return {PIXI.GraphicsData} The generated GraphicsData object.
@@ -1049,6 +1062,7 @@ export default class Graphics extends Container
 
         this.graphicsData.push(data);
 
+        //data.type=data.shape.type
         if (data.type === SHAPES.POLY)
         {
             data.shape.closed = data.shape.closed || this.filling;

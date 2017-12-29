@@ -37,6 +37,7 @@ export default class Container extends DisplayObject
 
     /**
      * Overridable method that can be used by Container subclasses whenever the children array is modified
+     * 子类覆盖，当子对象被修改时触发
      *
      * @private
      */
@@ -47,21 +48,27 @@ export default class Container extends DisplayObject
 
     /**
      * Adds one or more children to the container.
+     * 为容器添加一个或多个子对象
      *
      * Multiple items can be added like so: `myContainer.addChild(thingOne, thingTwo, thingThree)`
+     * 添加多个子对象的时候可以像这样：`myContainer.addChild(thingOne,thingTwo,thingThree)`
      *
      * @param {...PIXI.DisplayObject} child - The DisplayObject(s) to add to the container
+     * 添加到容器的子对象
      * @return {PIXI.DisplayObject} The first child that was added.
+     * 返回被添加的第一个子对象
      */
     addChild(child)
     {
         const argumentsLength = arguments.length;
 
         // if there is only one argument we can bypass looping through the them
+        // 如果只有一个子对象，就不用循环迭代了
         if (argumentsLength > 1)
         {
             // loop through the arguments property and add all children
             // use it the right way (.length and [i]) so that this function can still be optimised by JS runtimes
+            // 通过循环arguments来添加所有子对象
             for (let i = 0; i < argumentsLength; i++)
             {
                 this.addChild(arguments[i]);
@@ -70,6 +77,7 @@ export default class Container extends DisplayObject
         else
         {
             // if the child has a parent then lets remove it as PixiJS objects can only exist in one place
+            // 如果child有parent，需要给它更换一个新的parent
             if (child.parent)
             {
                 child.parent.removeChild(child);
@@ -77,11 +85,13 @@ export default class Container extends DisplayObject
 
             child.parent = this;
             // ensure child transform will be recalculated
+            // 确定child的transform将被重新计算
             child.transform._parentID = -1;
 
             this.children.push(child);
 
             // ensure bounds will be recalculated
+            // 确定bound将被重新计算
             this._boundsID++;
 
             // TODO - lets either do all callbacks or all events.. not both!
@@ -94,6 +104,8 @@ export default class Container extends DisplayObject
 
     /**
      * Adds a child to the container at a specified index. If the index is out of bounds an error will be thrown
+     * 添加一个子对象到容器指定的索引
+     * 如果索引值超出范围将报错
      *
      * @param {PIXI.DisplayObject} child - The child to add
      * @param {number} index - The index to place the child in
@@ -129,6 +141,7 @@ export default class Container extends DisplayObject
 
     /**
      * Swaps the position of 2 Display Objects within this container.
+     * 交换该容器中两个子对象的索引
      *
      * @param {PIXI.DisplayObject} child - First display object to swap
      * @param {PIXI.DisplayObject} child2 - Second display object to swap
@@ -150,6 +163,7 @@ export default class Container extends DisplayObject
 
     /**
      * Returns the index position of a child DisplayObject instance
+     * 返回child的索引
      *
      * @param {PIXI.DisplayObject} child - The DisplayObject instance to identify
      * @return {number} The index position of the child display object to identify
@@ -168,6 +182,7 @@ export default class Container extends DisplayObject
 
     /**
      * Changes the position of an existing child in the display object container
+     * 改变容器中child的索引
      *
      * @param {PIXI.DisplayObject} child - The child DisplayObject instance for which you want to change the index number
      * @param {number} index - The resulting index number for the child display object
@@ -189,6 +204,7 @@ export default class Container extends DisplayObject
 
     /**
      * Returns the child at the specified index
+     * 返回指定索引下的子对象
      *
      * @param {number} index - The index to get the child at
      * @return {PIXI.DisplayObject} The child at the given index, if any.
@@ -205,6 +221,7 @@ export default class Container extends DisplayObject
 
     /**
      * Removes one or more children from the container.
+     * 从该容器中移除一个或多个子对象
      *
      * @param {...PIXI.DisplayObject} child - The DisplayObject(s) to remove
      * @return {PIXI.DisplayObject} The first child that was removed.
@@ -247,6 +264,7 @@ export default class Container extends DisplayObject
 
     /**
      * Removes a child from the specified index position.
+     * 从指定索引移除子对象
      *
      * @param {number} index - The index to get the child from
      * @return {PIXI.DisplayObject} The child that was removed.
@@ -272,6 +290,7 @@ export default class Container extends DisplayObject
 
     /**
      * Removes all children from this container that are within the begin and end indexes.
+     * 移除多个所有子对象，从beginIndex到endIndex
      *
      * @param {number} [beginIndex=0] - The beginning position.
      * @param {number} [endIndex=this.children.length] - The ending position. Default value is size of the container.
@@ -318,6 +337,7 @@ export default class Container extends DisplayObject
 
     /**
      * Updates the transform on all children of this container for rendering
+     * 更新该容器所有子对象transform，以便渲染
      */
     updateTransform()
     {
@@ -341,6 +361,7 @@ export default class Container extends DisplayObject
 
     /**
      * Recalculates the bounds of the container.
+     * 重新计算容器边界
      *
      */
     calculateBounds()
@@ -383,6 +404,7 @@ export default class Container extends DisplayObject
      * Recalculates the bounds of the object. Override this to
      * calculate the bounds of the specific object (not including children).
      *
+     * 重新计算该对象边界，覆写以计算指定对象边界
      */
     _calculateBounds()
     {
@@ -391,6 +413,7 @@ export default class Container extends DisplayObject
 
     /**
      * Renders the object using the WebGL renderer
+     * 使用WebGL渲染
      *
      * @param {PIXI.WebGLRenderer} renderer - The renderer
      */
@@ -507,6 +530,7 @@ export default class Container extends DisplayObject
 
     /**
      * Renders the object using the Canvas renderer
+     * 使用Canvas渲染该对象
      *
      * @param {PIXI.CanvasRenderer} renderer - The renderer
      */
@@ -538,13 +562,19 @@ export default class Container extends DisplayObject
     /**
      * Removes all internal references and listeners as well as removes children from the display list.
      * Do not use a Container after calling `destroy`.
+     * 移除所有内部引用和侦听事件，以及从显示列表移除所有子对象
+     * `destroy`之后不要在调用该容器
      *
      * @param {object|boolean} [options] - Options parameter. A boolean will act as if all options
      *  have been set to that value
      * @param {boolean} [options.children=false] - if set to true, all the children will have their destroy
      *  method called as well. 'options' will be passed on to those calls.
+     *  options.children=false - 如果设置为true，所有子对象也将执行destroy方法。
+     *
      * @param {boolean} [options.texture=false] - Only used for child Sprites if options.children is set to true
      *  Should it destroy the texture of the child sprite
+     *  options.texture=false - 仅用类型为于Sprite的子对象，如果options.children设置为true。确定是否破坏Sprite对象的纹理
+     *
      * @param {boolean} [options.baseTexture=false] - Only used for child Sprites if options.children is set to true
      *  Should it destroy the base texture of the child sprite
      */
@@ -567,6 +597,7 @@ export default class Container extends DisplayObject
 
     /**
      * The width of the Container, setting this will actually modify the scale to achieve the value set
+     * 容器的宽，设置该值将修改scale
      *
      * @member {number}
      */

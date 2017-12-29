@@ -44,6 +44,7 @@ export default class CanvasGraphicsRenderer
         const resolution = renderer.resolution;
 
          // if the tint has changed, set the graphics object to dirty.
+        // 如果tint值改变了，那么该图像为脏数据
         if (this._prevTint !== this.tint)
         {
             this.dirty = true;
@@ -219,6 +220,7 @@ export default class CanvasGraphicsRenderer
 
     /**
      * Updates the tint of a graphics object
+     * 更新图像的染色
      *
      * @private
      * @param {PIXI.Graphics} graphics - the graphics that will have its tint updated

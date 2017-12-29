@@ -10,6 +10,9 @@ import settings from '../../settings';
  * The CanvasRenderer draws the scene and all its content onto a 2d canvas. This renderer should
  * be used for browsers that do not support WebGL. Don't forget to add the CanvasRenderer.view to
  * your DOM or you will not see anything :)
+ * CanvasRenderer绘制场景中所有内容到canvas 2d上
+ * 该渲染方式用于浏览器，不支持WebGL
+ * 不要忘记添加CanvasRenderer.view到你的DOM，否则你啥都看不到
  *
  * @class
  * @memberof PIXI

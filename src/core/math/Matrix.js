@@ -10,8 +10,7 @@ import Point from './Point';
  * @class
  * @memberof PIXI
  */
-export default class Matrix
-{
+export default class Matrix {
     /**
      * @param {number} [a=1] - x scale
      * @param {number} [b=0] - y skew
@@ -20,8 +19,7 @@ export default class Matrix
      * @param {number} [tx=0] - x translation
      * @param {number} [ty=0] - y translation
      */
-    constructor(a = 1, b = 0, c = 0, d = 1, tx = 0, ty = 0)
-    {
+    constructor(a = 1, b = 0, c = 0, d = 1, tx = 0, ty = 0) {
         /**
          * @member {number}
          * @default 1
@@ -73,8 +71,7 @@ export default class Matrix
      *
      * @param {number[]} array - The array that the matrix will be populated from.
      */
-    fromArray(array)
-    {
+    fromArray(array) {
         this.a = array[0];
         this.b = array[1];
         this.c = array[3];
@@ -95,8 +92,7 @@ export default class Matrix
      *
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    set(a, b, c, d, tx, ty)
-    {
+    set(a, b, c, d, tx, ty) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -114,17 +110,14 @@ export default class Matrix
      * @param {Float32Array} [out=new Float32Array(9)] - If provided the array will be assigned to out
      * @return {number[]} the newly created array which contains the matrix
      */
-    toArray(transpose, out)
-    {
-        if (!this.array)
-        {
+    toArray(transpose, out) {
+        if (!this.array) {
             this.array = new Float32Array(9);
         }
 
         const array = out || this.array;
 
-        if (transpose)
-        {
+        if (transpose) {
             array[0] = this.a;
             array[1] = this.b;
             array[2] = 0;
@@ -135,8 +128,7 @@ export default class Matrix
             array[7] = this.ty;
             array[8] = 1;
         }
-        else
-        {
+        else {
             array[0] = this.a;
             array[1] = this.c;
             array[2] = this.tx;
@@ -155,15 +147,18 @@ export default class Matrix
      * Get a new position with the current transformation applied.
      * Can be used to go from a child's coordinate space to the world coordinate space. (e.g. rendering)
      * 获取一个使用当前 Matrix 转换之后的点
-     * 可以用它来获取子坐标空间的点，在世界坐标空间的位置
+     * 可以用它来获取子坐标中的点在世界坐标空间的位置
      * 参考 {PIXI.DisplayObject} property toGlobal
+     *
+     * |a c tx|   |x|   |a*x+c*y+tx|
+     * |b d ty| x |y| = |b*x+d*y+ty|
+     * |0 0 1 |   |1|   |1         |
      *
      * @param {PIXI.Point} pos - The origin
      * @param {PIXI.Point} [newPos] - The point that the new position is assigned to (allowed to be same as input)
      * @return {PIXI.Point} The new point, transformed through this matrix
      */
-    apply(pos, newPos)
-    {
+    apply(pos, newPos) {
         newPos = newPos || new Point();
 
         const x = pos.x;
@@ -186,8 +181,7 @@ export default class Matrix
      * @param {PIXI.Point} [newPos] - The point that the new position is assigned to (allowed to be same as input)
      * @return {PIXI.Point} The new point, inverse-transformed through this matrix
      */
-    applyInverse(pos, newPos)
-    {
+    applyInverse(pos, newPos) {
         newPos = newPos || new Point();
 
         const id = 1 / ((this.a * this.d) + (this.c * -this.b));
@@ -209,8 +203,7 @@ export default class Matrix
      * @param {number} y How much to translate y by
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    translate(x, y)
-    {
+    translate(x, y) {
         this.tx += x;
         this.ty += y;
 
@@ -221,17 +214,21 @@ export default class Matrix
      * Applies a scale transformation to the matrix.
      * 缩放
      *
+     * |x 0 0|   |a c tx|   |a*x c*x tx*x|
+     * |0 y 0| x |b d ty| = |b*y d*y ty*y|
+     * |0 0 1|   |0 0 1 |   |0   0   1   |
+     *
      * @param {number} x The amount to scale horizontally
      * @param {number} y The amount to scale vertically
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    scale(x, y)
-    {
+    scale(x, y) {
         this.a *= x;
         this.d *= y;
         this.c *= x;
         this.b *= y;
-        //??scale 为什么会影响tx和ty的值
+        //Q:scale 为什么会影响tx和ty的值
+        //A:控制点不是注册点的时候，缩放会影响注册点的位置
         this.tx *= x;
         this.ty *= y;
 
@@ -240,12 +237,16 @@ export default class Matrix
 
     /**
      * Applies a rotation transformation to the matrix.
+     * 旋转
+     *
+     * |cos -sin 0|   |a c tx|   |cos*a-sin*b cos*c-sin*d cos*tx-sin*ty|
+     * |sin cos  0| x |b d ty| = |sin*a+cos*d sin*c+cos*d sin*tx+cos*ty|
+     * |0   0    1|   |0 0 1 |   |0           0           1            |
      *
      * @param {number} angle - The angle in radians.
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    rotate(angle)
-    {
+    rotate(angle) {
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
 
@@ -266,11 +267,14 @@ export default class Matrix
     /**
      * Appends the given Matrix to this Matrix.
      *
+     * |a c tx|   |ma mc mtx|    |a*ma+c*mb a*mc+c*md a*mtx+c*mty+tx|
+     * |b d ty| x |mb md mty|  = |b*ma+d*mb b*mc+d*md b*mtx+d*mty+ty|
+     * |0 0 1 |   |0  0  1  |    |0         0         1             |
+     *
      * @param {PIXI.Matrix} matrix - The matrix to append.
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    append(matrix)
-    {
+    append(matrix) {
         const a1 = this.a;
         const b1 = this.b;
         const c1 = this.c;
@@ -301,19 +305,38 @@ export default class Matrix
      * @param {number} skewY - Skew on the y axis
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    setTransform(x, y, pivotX, pivotY, scaleX, scaleY, rotation, skewX, skewY)
-    {
+    setTransform(x, y, pivotX, pivotY, scaleX, scaleY, rotation, skewX, skewY) {
         const sr = Math.sin(rotation);
         const cr = Math.cos(rotation);
+
         const cy = Math.cos(skewY);
         const sy = Math.sin(skewY);
         const nsx = -Math.sin(skewX);
         const cx = Math.cos(skewX);
 
+        /**
+         *
+         *          |scaleX 0     |
+         *          |0      scaleY|
+         *
+         * |cr -sr| |a      c     |
+         * |sr cr | |b      d     |
+         *
+         * */
         const a = cr * scaleX;
         const b = sr * scaleX;
         const c = -sr * scaleY;
         const d = cr * scaleY;
+
+        /**
+         *         |cy nsx pivotX|
+         *         |sy cx  pivotY|
+         *         |0  0   1     |
+         *
+         * |a c x| |.a .c .tx    |
+         * |b d y| |.b .d .ty    |
+         *
+         * */
 
         this.a = (cy * a) + (sy * c);
         this.b = (cy * b) + (sy * d);
@@ -332,12 +355,10 @@ export default class Matrix
      * @param {PIXI.Matrix} matrix - The matrix to prepend
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    prepend(matrix)
-    {
+    prepend(matrix) {
         const tx1 = this.tx;
 
-        if (matrix.a !== 1 || matrix.b !== 0 || matrix.c !== 0 || matrix.d !== 1)
-        {
+        if (matrix.a !== 1 || matrix.b !== 0 || matrix.c !== 0 || matrix.d !== 1) {
             const a1 = this.a;
             const c1 = this.c;
 
@@ -359,8 +380,7 @@ export default class Matrix
      * @param {PIXI.Transform|PIXI.TransformStatic} transform - The transform to apply the properties to.
      * @return {PIXI.Transform|PIXI.TransformStatic} The transform with the newly applied properties
      */
-    decompose(transform)
-    {
+    decompose(transform) {
         // sort out rotation / skew..
         const a = this.a;
         const b = this.b;
@@ -372,19 +392,16 @@ export default class Matrix
 
         const delta = Math.abs(skewX + skewY);
 
-        if (delta < 0.00001)
-        {
+        if (delta < 0.00001) {
             transform.rotation = skewY;
 
-            if (a < 0 && d >= 0)
-            {
+            if (a < 0 && d >= 0) {
                 transform.rotation += (transform.rotation <= 0) ? Math.PI : -Math.PI;
             }
 
             transform.skew.x = transform.skew.y = 0;
         }
-        else
-        {
+        else {
             transform.skew.x = skewX;
             transform.skew.y = skewY;
         }
@@ -405,8 +422,7 @@ export default class Matrix
      *
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    invert()
-    {
+    invert() {
         const a1 = this.a;
         const b1 = this.b;
         const c1 = this.c;
@@ -429,8 +445,7 @@ export default class Matrix
      *
      * @return {PIXI.Matrix} This matrix. Good for chaining method calls.
      */
-    identity()
-    {
+    identity() {
         this.a = 1;
         this.b = 0;
         this.c = 0;
@@ -446,8 +461,7 @@ export default class Matrix
      *
      * @return {PIXI.Matrix} A copy of this matrix. Good for chaining method calls.
      */
-    clone()
-    {
+    clone() {
         const matrix = new Matrix();
 
         matrix.a = this.a;
@@ -466,8 +480,7 @@ export default class Matrix
      * @param {PIXI.Matrix} matrix - The matrix to copy from.
      * @return {PIXI.Matrix} The matrix given in parameter with its values updated.
      */
-    copy(matrix)
-    {
+    copy(matrix) {
         matrix.a = this.a;
         matrix.b = this.b;
         matrix.c = this.c;
@@ -484,8 +497,7 @@ export default class Matrix
      * @static
      * @const
      */
-    static get IDENTITY()
-    {
+    static get IDENTITY() {
         return new Matrix();
     }
 
@@ -495,8 +507,7 @@ export default class Matrix
      * @static
      * @const
      */
-    static get TEMP_MATRIX()
-    {
+    static get TEMP_MATRIX() {
         return new Matrix();
     }
 }
