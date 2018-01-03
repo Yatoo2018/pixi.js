@@ -239,6 +239,8 @@ export default class DisplayObject extends EventEmitter
     /**
      * Retrieves the local bounds of the displayObject as a rectangle object
      *
+     * 将该对象单独拎出来处理，处理完成之后再将parent赋值回去
+     *
      * @param {PIXI.Rectangle} [rect] - Optional rectangle to store the result of the bounds calculation
      * @return {PIXI.Rectangle} the rectangular bounding area
      */
@@ -270,6 +272,8 @@ export default class DisplayObject extends EventEmitter
 
     /**
      * Calculates the global position of the display object
+     *
+     * 计算显示对象的全局位置
      *
      * @param {PIXI.Point} position - The world origin to calculate from
      * @param {PIXI.Point} [point] - A Point object in which to store the value, optional

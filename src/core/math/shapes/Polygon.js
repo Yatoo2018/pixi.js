@@ -13,6 +13,8 @@ export default class Polygon
      *  the arguments passed can be all the points of the polygon e.g.
      *  `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the arguments passed can be flat
      *  x,y values e.g. `new Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are Numbers.
+     *
+     *  每两个临近的值代表一个点，可以使用(x,y,x,y...)，传参，也可以使用(new Point(),new Point()...)传参
      */
     constructor(...points)
     {
@@ -100,7 +102,14 @@ export default class Polygon
             const yi = this.points[(i * 2) + 1];
             const xj = this.points[j * 2];
             const yj = this.points[(j * 2) + 1];
-            const intersect = ((yi > y) !== (yj > y)) && (x < ((xj - xi) * ((y - yi) / (yj - yi))) + xi);
+            const intersect =
+
+                //参考：http://blog.csdn.net/jq_develop/article/details/44981127
+                //以(x,y)为起点，做一条平行于x轴的射线
+                //判断点i和点j是否在射线的两侧
+                ((yi > y) !== (yj > y))
+                //经过点(x,y)的射线，和线段ij的交点
+                && (x < ((xj - xi) * ((y - yi) / (yj - yi))) + xi);
 
             if (intersect)
             {

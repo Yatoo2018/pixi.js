@@ -54,6 +54,20 @@ export default class Transform extends TransformBase
          */
         this._rotation = 0;
 
+
+        //pixi.js将旋转和缩放整合到一个变量里面了
+        /**
+         *
+         *            |1     tanX|
+         *            |tanY 1    |
+         *
+         * |cos -sin| |cos-sin*tanY cos*tanX-sin|
+         * |sin cos | |sin+cos*tanY sin*tanX+cos|
+         *
+         * |cos-sin*tanY cos*tanX-sin|   |cosY 0   |   |cos*cosY-sin*sinY cos*sinX-sin*sinX|
+         * |sin+cos*tanY sin*tanX+cos| * |0    cosX| = |sin*cosY+cos*sinY sin*sinX+cos*cosX|
+         *
+         * */
         this._cx = 1; // cos rotation + skewY;
         this._sx = 0; // sin rotation + skewY;
         this._cy = 0; // cos rotation + Math.PI/2 - skewX;

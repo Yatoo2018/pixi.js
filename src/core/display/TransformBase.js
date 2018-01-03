@@ -51,6 +51,7 @@ export default class TransformBase
         const lt = this.localTransform;
 
         // concat the parent matrix with the objects transform.
+        //wt=pt*lt
         wt.a = (lt.a * pt.a) + (lt.b * pt.c);
         wt.b = (lt.a * pt.b) + (lt.b * pt.d);
         wt.c = (lt.c * pt.a) + (lt.d * pt.c);

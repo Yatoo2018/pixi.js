@@ -294,6 +294,9 @@ export default class Matrix {
     /**
      * Sets the matrix based on all the available properties
      *
+     * 关于这个问题的争论：
+     * https://github.com/pixijs/pixi.js/issues/4417
+     *
      * @param {number} x - Position on the x axis
      * @param {number} y - Position on the y axis
      * @param {number} pivotX - Pivot on the x axis
