@@ -1062,7 +1062,7 @@ export default class Graphics extends Container
 
         this.graphicsData.push(data);
 
-        //data.type=data.shape.type
+        // data.type=data.shape.type
         if (data.type === SHAPES.POLY)
         {
             data.shape.closed = data.shape.closed || this.filling;

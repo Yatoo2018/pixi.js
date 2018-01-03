@@ -102,13 +102,11 @@ export default class Polygon
             const yi = this.points[(i * 2) + 1];
             const xj = this.points[j * 2];
             const yj = this.points[(j * 2) + 1];
-            const intersect =
-
-                //参考：http://blog.csdn.net/jq_develop/article/details/44981127
-                //以(x,y)为起点，做一条平行于x轴的射线
-                //判断点i和点j是否在射线的两侧
-                ((yi > y) !== (yj > y))
-                //经过点(x,y)的射线，和线段ij的交点
+                // 参考：http://blog.csdn.net/jq_develop/article/details/44981127
+                // 以(x,y)为起点，做一条平行于x轴的射线
+                // 判断点i和点j是否在射线的两侧
+            const intersect = ((yi > y) !== (yj > y))
+                // 经过点(x,y)的射线，和线段ij的交点
                 && (x < ((xj - xi) * ((y - yi) / (yj - yi))) + xi);
 
             if (intersect)

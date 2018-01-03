@@ -227,8 +227,8 @@ export default class Matrix {
         this.d *= y;
         this.c *= x;
         this.b *= y;
-        //Q:scale 为什么会影响tx和ty的值
-        //A:控制点不是注册点的时候，缩放会影响注册点的位置
+        // Q:scale 为什么会影响tx和ty的值
+        // A:控制点不是注册点的时候，缩放会影响注册点的位置
         this.tx *= x;
         this.ty *= y;
 

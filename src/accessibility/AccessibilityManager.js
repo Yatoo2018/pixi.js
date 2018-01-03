@@ -33,7 +33,7 @@ const DIV_HOOK_ZINDEX = 2;
 export default class AccessibilityManager
 {
     /**
-     * @param {PIXI.CanvasRenderer|PIXI.WebGLRenderer} 渲染器 - 当前使用的渲染器
+     * @param {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - 当前使用的渲染器
      */
     constructor(renderer)
     {

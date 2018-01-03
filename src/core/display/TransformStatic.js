@@ -136,7 +136,7 @@ export default class TransformStatic extends TransformBase
             const pt = parentTransform.worldTransform;
             const wt = this.worldTransform;
 
-            //wt=pt*lt
+            // wt=pt*lt
             wt.a = (lt.a * pt.a) + (lt.b * pt.c);
             wt.b = (lt.a * pt.b) + (lt.b * pt.d);
             wt.c = (lt.c * pt.a) + (lt.d * pt.c);

@@ -16,13 +16,11 @@ import {Rectangle} from '../math';
  * @extends EventEmitter
  * @memberof PIXI
  */
-export default class DisplayObject extends EventEmitter
-{
+export default class DisplayObject extends EventEmitter {
     /**
      *
      */
-    constructor()
-    {
+    constructor() {
         super();
 
         const TransformClass = settings.TRANSFORM_MODE === TRANSFORM_MODE.STATIC ? TransformStatic : Transform;
@@ -145,10 +143,8 @@ export default class DisplayObject extends EventEmitter
      * @private
      * @member {PIXI.DisplayObject}
      */
-    get _tempDisplayObjectParent()
-    {
-        if (this.tempDisplayObjectParent === null)
-        {
+    get _tempDisplayObjectParent() {
+        if (this.tempDisplayObjectParent === null) {
             this.tempDisplayObjectParent = new DisplayObject();
         }
 
@@ -160,8 +156,7 @@ export default class DisplayObject extends EventEmitter
      *
      * TODO - Optimization pass!
      */
-    updateTransform()
-    {
+    updateTransform() {
         this.transform.updateTransform(this.parent.transform);
         // multiply the alphas..
         this.worldAlpha = this.alpha * this.parent.worldAlpha;
@@ -174,15 +169,12 @@ export default class DisplayObject extends EventEmitter
      * internal function for toLocal()
      * 递归更新从根节点到当前的所有对象的 transform 属性
      */
-    _recursivePostUpdateTransform()
-    {
-        if (this.parent)
-        {
+    _recursivePostUpdateTransform() {
+        if (this.parent) {
             this.parent._recursivePostUpdateTransform();
             this.transform.updateTransform(this.parent.transform);
         }
-        else
-        {
+        else {
             this.transform.updateTransform(this._tempDisplayObjectParent.transform);
         }
     }
@@ -201,32 +193,25 @@ export default class DisplayObject extends EventEmitter
      *
      * @return {PIXI.Rectangle} the rectangular bounding area
      */
-    getBounds(skipUpdate, rect)
-    {
-        if (!skipUpdate)
-        {
-            if (!this.parent)
-            {
+    getBounds(skipUpdate, rect) {
+        if (!skipUpdate) {
+            if (!this.parent) {
                 this.parent = this._tempDisplayObjectParent;
                 this.updateTransform();
                 this.parent = null;
             }
-            else
-            {
+            else {
                 this._recursivePostUpdateTransform();
                 this.updateTransform();
             }
         }
 
-        if (this._boundsID !== this._lastBoundsID)
-        {
+        if (this._boundsID !== this._lastBoundsID) {
             this.calculateBounds();
         }
 
-        if (!rect)
-        {
-            if (!this._boundsRect)
-            {
+        if (!rect) {
+            if (!this._boundsRect) {
                 this._boundsRect = new Rectangle();
             }
 
@@ -244,18 +229,15 @@ export default class DisplayObject extends EventEmitter
      * @param {PIXI.Rectangle} [rect] - Optional rectangle to store the result of the bounds calculation
      * @return {PIXI.Rectangle} the rectangular bounding area
      */
-    getLocalBounds(rect)
-    {
+    getLocalBounds(rect) {
         const transformRef = this.transform;
         const parentRef = this.parent;
 
         this.parent = null;
         this.transform = this._tempDisplayObjectParent.transform;
 
-        if (!rect)
-        {
-            if (!this._localBoundsRect)
-            {
+        if (!rect) {
+            if (!this._localBoundsRect) {
                 this._localBoundsRect = new Rectangle();
             }
 
@@ -281,23 +263,19 @@ export default class DisplayObject extends EventEmitter
      * @param {boolean} [skipUpdate=false] - Should we skip the update transform.
      * @return {PIXI.Point} A point object representing the position of this object
      */
-    toGlobal(position, point, skipUpdate = false)
-    {
-        if (!skipUpdate)
-        {
+    toGlobal(position, point, skipUpdate = false) {
+        if (!skipUpdate) {
             this._recursivePostUpdateTransform();
 
             // this parent check is for just in case the item is a root object.
             // If it is we need to give it a temporary parent so that displayObjectUpdateTransform works correctly
             // this is mainly to avoid a parent check in the main loop. Every little helps for performance :)
-            if (!this.parent)
-            {
+            if (!this.parent) {
                 this.parent = this._tempDisplayObjectParent;
                 this.displayObjectUpdateTransform();
                 this.parent = null;
             }
-            else
-            {
+            else {
                 this.displayObjectUpdateTransform();
             }
         }
@@ -316,28 +294,23 @@ export default class DisplayObject extends EventEmitter
      * @param {boolean} [skipUpdate=false] - Should we skip the update transform
      * @return {PIXI.Point} A point object representing the position of this object
      */
-    toLocal(position, from, point, skipUpdate)
-    {
-        if (from)
-        {
+    toLocal(position, from, point, skipUpdate) {
+        if (from) {
             position = from.toGlobal(position, point, skipUpdate);
         }
 
-        if (!skipUpdate)
-        {
+        if (!skipUpdate) {
             this._recursivePostUpdateTransform();
 
             // this parent check is for just in case the item is a root object.
             // If it is we need to give it a temporary parent so that displayObjectUpdateTransform works correctly
             // this is mainly to avoid a parent check in the main loop. Every little helps for performance :)
-            if (!this.parent)
-            {
+            if (!this.parent) {
                 this.parent = this._tempDisplayObjectParent;
                 this.displayObjectUpdateTransform();
                 this.parent = null;
             }
-            else
-            {
+            else {
                 this.displayObjectUpdateTransform();
             }
         }
@@ -375,10 +348,8 @@ export default class DisplayObject extends EventEmitter
      * @return {PIXI.Container} The Container that this DisplayObject was added to
      * 返回该容器
      */
-    setParent(container)
-    {
-        if (!container || !container.addChild)
-        {
+    setParent(container) {
+        if (!container || !container.addChild) {
             throw new Error('setParent: Argument must be a Container');
         }
 
@@ -402,8 +373,7 @@ export default class DisplayObject extends EventEmitter
      * @param {number} [pivotY=0] - The Y pivot value
      * @return {PIXI.DisplayObject} The DisplayObject instance
      */
-    setTransform(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0, skewX = 0, skewY = 0, pivotX = 0, pivotY = 0)
-    {
+    setTransform(x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0, skewX = 0, skewY = 0, pivotX = 0, pivotY = 0) {
         this.position.x = x;
         this.position.y = y;
         this.scale.x = !scaleX ? 1 : scaleX;
@@ -427,11 +397,9 @@ export default class DisplayObject extends EventEmitter
      * 不要在执行`destroy`之后使用该显示对象
      *
      */
-    destroy()
-    {
+    destroy() {
         this.removeAllListeners();
-        if (this.parent)
-        {
+        if (this.parent) {
             this.parent.removeChild(this);
         }
         this.transform = null;
@@ -456,8 +424,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {number}
      */
-    get x()
-    {
+    get x() {
         return this.position.x;
     }
 
@@ -472,8 +439,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {number}
      */
-    get y()
-    {
+    get y() {
         return this.position.y;
     }
 
@@ -488,8 +454,7 @@ export default class DisplayObject extends EventEmitter
      * @member {PIXI.Matrix}
      * @readonly
      */
-    get worldTransform()
-    {
+    get worldTransform() {
         return this.transform.worldTransform;
     }
 
@@ -499,8 +464,7 @@ export default class DisplayObject extends EventEmitter
      * @member {PIXI.Matrix}
      * @readonly
      */
-    get localTransform()
-    {
+    get localTransform() {
         return this.transform.localTransform;
     }
 
@@ -510,8 +474,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {PIXI.Point|PIXI.ObservablePoint}
      */
-    get position()
-    {
+    get position() {
         return this.transform.position;
     }
 
@@ -526,8 +489,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {PIXI.Point|PIXI.ObservablePoint}
      */
-    get scale()
-    {
+    get scale() {
         return this.transform.scale;
     }
 
@@ -542,8 +504,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {PIXI.Point|PIXI.ObservablePoint}
      */
-    get pivot()
-    {
+    get pivot() {
         return this.transform.pivot;
     }
 
@@ -558,8 +519,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {PIXI.ObservablePoint}
      */
-    get skew()
-    {
+    get skew() {
         return this.transform.skew;
     }
 
@@ -573,8 +533,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {number}
      */
-    get rotation()
-    {
+    get rotation() {
         return this.transform.rotation;
     }
 
@@ -590,14 +549,11 @@ export default class DisplayObject extends EventEmitter
      * @member {boolean}
      * @readonly
      */
-    get worldVisible()
-    {
+    get worldVisible() {
         let item = this;
 
-        do
-        {
-            if (!item.visible)
-            {
+        do {
+            if (!item.visible) {
                 return false;
             }
 
@@ -623,22 +579,19 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {PIXI.Graphics|PIXI.Sprite}
      */
-    get mask()
-    {
+    get mask() {
         return this._mask;
     }
 
     set mask(value) // eslint-disable-line require-jsdoc
     {
-        if (this._mask)
-        {
+        if (this._mask) {
             this._mask.renderable = true;
         }
 
         this._mask = value;
 
-        if (this._mask)
-        {
+        if (this._mask) {
             this._mask.renderable = false;
         }
     }
@@ -653,8 +606,7 @@ export default class DisplayObject extends EventEmitter
      *
      * @member {PIXI.Filter[]}
      */
-    get filters()
-    {
+    get filters() {
         return this._filters && this._filters.slice();
     }
 

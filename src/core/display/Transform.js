@@ -54,8 +54,7 @@ export default class Transform extends TransformBase
          */
         this._rotation = 0;
 
-
-        //pixi.js将旋转和缩放整合到一个变量里面了
+        // pixi.js将旋转和缩放整合到一个变量里面了
         /**
          *
          *            |1     tanX|
