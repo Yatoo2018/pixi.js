@@ -125,13 +125,19 @@ export default class CanvasRenderer extends SystemRenderer
 
     /**
      * Renders the object to this canvas view
+     * 渲染该对象到canvas视图
      *
      * @param {PIXI.DisplayObject} displayObject - The object to be rendered
+     * 被渲染的对象
      * @param {PIXI.RenderTexture} [renderTexture] - A render texture to be rendered to.
      *  If unset, it will render to the root context.
+     * 要呈现的纹理，如果不设置，他将渲染root context
      * @param {boolean} [clear=false] - Whether to clear the canvas before drawing
+     * 绘制前是否清理canvas
      * @param {PIXI.Transform} [transform] - A transformation to be applied
+     * 一个被应用的transform
      * @param {boolean} [skipUpdateTransform=false] - Whether to skip the update transform
+     * 是否跳过transform更新
      */
     render(displayObject, renderTexture, clear, transform, skipUpdateTransform)
     {
@@ -339,6 +345,8 @@ export default class CanvasRenderer extends SystemRenderer
  * Collection of installed plugins. These are included by default in PIXI, but can be excluded
  * by creating a custom build. Consult the README for more information about creating custom
  * builds and excluding plugins.
+ * 已经安装的插件合集。
+ *
  * @name PIXI.CanvasRenderer#plugins
  * @type {object}
  * @readonly
@@ -350,6 +358,7 @@ export default class CanvasRenderer extends SystemRenderer
 
 /**
  * Adds a plugin to the renderer.
+ * 添加一个插件到渲染器
  *
  * @method PIXI.CanvasRenderer#registerPlugin
  * @param {string} pluginName - The name of the plugin.

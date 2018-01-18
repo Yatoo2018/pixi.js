@@ -1,12 +1,11 @@
 import {Point, Rectangle} from '../math';
-// import { Rectangle } from '../math';
 
 /**
  * 'Builder' pattern for bounds rectangles
  * Axis-Aligned Bounding Box
  * It is not a shape! Its mutable thing, no 'EMPTY' or that kind of problems
  *
- * 显示对象的矩形区域
+ * 显示对象的边界
  *
  * @class
  * @memberof PIXI
@@ -101,53 +100,6 @@ export default class Bounds {
 
     /**
      * Adds a quad, not transformed
-     *
-     * @param {Float32Array} vertices - The verts to add.
-     */
-
-    /* addQuad(vertices)
-    {
-        let minX = this.minX;
-        let minY = this.minY;
-        let maxX = this.maxX;
-        let maxY = this.maxY;
-
-        let x = vertices[0];
-        let y = vertices[1];
-
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-
-        x = vertices[2];
-        y = vertices[3];
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-
-        x = vertices[4];
-        y = vertices[5];
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-
-        x = vertices[6];
-        y = vertices[7];
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
-
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
-    } */
-    /**
-     * Adds a quad, not transformed
      * @param {Float32Array}vertices - the vertices to add
      */
     addQuad(vertices) {
@@ -176,44 +128,27 @@ export default class Bounds {
         const tx = matrix.tx;
         const ty = matrix.ty;
 
-        let minX = this.minX;
-        let minY = this.minY;
-        let maxX = this.maxX;
-        let maxY = this.maxY;
+        let x;
+        let y;
+        const vertices = [];
 
-        let x = (a * x0) + (c * y0) + tx;
-        let y = (b * x0) + (d * y0) + ty;
-
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
+        x = (a * x0) + (c * y0) + tx;
+        y = (b * x0) + (d * y0) + ty;
+        vertices.push(x, y);
 
         x = (a * x1) + (c * y0) + tx;
         y = (b * x1) + (d * y0) + ty;
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
+        vertices.push(x, y);
 
         x = (a * x0) + (c * y1) + tx;
         y = (b * x0) + (d * y1) + ty;
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
+        vertices.push(x, y);
 
         x = (a * x1) + (c * y1) + tx;
         y = (b * x1) + (d * y1) + ty;
-        minX = x < minX ? x : minX;
-        minY = y < minY ? y : minY;
-        maxX = x > maxX ? x : maxX;
-        maxY = y > maxY ? y : maxY;
+        vertices.push(x, y);
 
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
+        this.addQuad(vertices);
     }
 
     /**

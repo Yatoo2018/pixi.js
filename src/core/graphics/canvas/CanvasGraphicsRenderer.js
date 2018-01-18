@@ -1,5 +1,5 @@
 import CanvasRenderer from '../../renderers/canvas/CanvasRenderer';
-import { SHAPES } from '../../const';
+import {SHAPES} from '../../const';
 
 /**
  * @author Mat Groves
@@ -20,13 +20,11 @@ import { SHAPES } from '../../const';
  * @private
  * @memberof PIXI
  */
-export default class CanvasGraphicsRenderer
-{
+export default class CanvasGraphicsRenderer {
     /**
      * @param {PIXI.CanvasRenderer} renderer - The current PIXI renderer.
      */
-    constructor(renderer)
-    {
+    constructor(renderer) {
         this.renderer = renderer;
     }
 
@@ -35,18 +33,16 @@ export default class CanvasGraphicsRenderer
      *
      * @param {PIXI.Graphics} graphics - the actual graphics object to render
      */
-    render(graphics)
-    {
+    render(graphics) {
         const renderer = this.renderer;
         const context = renderer.context;
         const worldAlpha = graphics.worldAlpha;
         const transform = graphics.transform.worldTransform;
         const resolution = renderer.resolution;
 
-         // if the tint has changed, set the graphics object to dirty.
+        // if the tint has changed, set the graphics object to dirty.
         // 如果tint值改变了，那么该图像为脏数据
-        if (this._prevTint !== this.tint)
-        {
+        if (this._prevTint !== this.tint) {
             this.dirty = true;
         }
 
@@ -59,16 +55,14 @@ export default class CanvasGraphicsRenderer
             transform.ty * resolution
         );
 
-        if (graphics.dirty)
-        {
+        if (graphics.dirty) {
             this.updateGraphicsTint(graphics);
             graphics.dirty = false;
         }
 
         renderer.setBlendMode(graphics.blendMode);
 
-        for (let i = 0; i < graphics.graphicsData.length; i++)
-        {
+        for (let i = 0; i < graphics.graphicsData.length; i++) {
             const data = graphics.graphicsData[i];
             const shape = data.shape;
 
@@ -77,67 +71,56 @@ export default class CanvasGraphicsRenderer
 
             context.lineWidth = data.lineWidth;
 
-            if (data.type === SHAPES.POLY)
-            {
+            if (data.type === SHAPES.POLY) {
                 context.beginPath();
 
                 this.renderPolygon(shape.points, shape.closed, context);
 
-                for (let j = 0; j < data.holes.length; j++)
-                {
+                for (let j = 0; j < data.holes.length; j++) {
                     this.renderPolygon(data.holes[j].points, true, context);
                 }
 
-                if (data.fill)
-                {
+                if (data.fill) {
                     context.globalAlpha = data.fillAlpha * worldAlpha;
                     context.fillStyle = `#${(`00000${(fillColor | 0).toString(16)}`).substr(-6)}`;
                     context.fill();
                 }
-                if (data.lineWidth)
-                {
+                if (data.lineWidth) {
                     context.globalAlpha = data.lineAlpha * worldAlpha;
                     context.strokeStyle = `#${(`00000${(lineColor | 0).toString(16)}`).substr(-6)}`;
                     context.stroke();
                 }
             }
-            else if (data.type === SHAPES.RECT)
-            {
-                if (data.fillColor || data.fillColor === 0)
-                {
+            else if (data.type === SHAPES.RECT) {
+                if (data.fillColor || data.fillColor === 0) {
                     context.globalAlpha = data.fillAlpha * worldAlpha;
                     context.fillStyle = `#${(`00000${(fillColor | 0).toString(16)}`).substr(-6)}`;
                     context.fillRect(shape.x, shape.y, shape.width, shape.height);
                 }
-                if (data.lineWidth)
-                {
+                if (data.lineWidth) {
                     context.globalAlpha = data.lineAlpha * worldAlpha;
                     context.strokeStyle = `#${(`00000${(lineColor | 0).toString(16)}`).substr(-6)}`;
                     context.strokeRect(shape.x, shape.y, shape.width, shape.height);
                 }
             }
-            else if (data.type === SHAPES.CIRC)
-            {
+            else if (data.type === SHAPES.CIRC) {
                 // TODO - need to be Undefined!
                 context.beginPath();
                 context.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
                 context.closePath();
 
-                if (data.fill)
-                {
+                if (data.fill) {
                     context.globalAlpha = data.fillAlpha * worldAlpha;
                     context.fillStyle = `#${(`00000${(fillColor | 0).toString(16)}`).substr(-6)}`;
                     context.fill();
                 }
-                if (data.lineWidth)
-                {
+                if (data.lineWidth) {
                     context.globalAlpha = data.lineAlpha * worldAlpha;
                     context.strokeStyle = `#${(`00000${(lineColor | 0).toString(16)}`).substr(-6)}`;
                     context.stroke();
                 }
             }
-            else if (data.type === SHAPES.ELIP)
-            {
+            else if (data.type === SHAPES.ELIP) {
                 // ellipse code taken from: http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
 
                 const w = shape.width * 2;
@@ -164,21 +147,18 @@ export default class CanvasGraphicsRenderer
 
                 context.closePath();
 
-                if (data.fill)
-                {
+                if (data.fill) {
                     context.globalAlpha = data.fillAlpha * worldAlpha;
                     context.fillStyle = `#${(`00000${(fillColor | 0).toString(16)}`).substr(-6)}`;
                     context.fill();
                 }
-                if (data.lineWidth)
-                {
+                if (data.lineWidth) {
                     context.globalAlpha = data.lineAlpha * worldAlpha;
                     context.strokeStyle = `#${(`00000${(lineColor | 0).toString(16)}`).substr(-6)}`;
                     context.stroke();
                 }
             }
-            else if (data.type === SHAPES.RREC)
-            {
+            else if (data.type === SHAPES.RREC) {
                 const rx = shape.x;
                 const ry = shape.y;
                 const width = shape.width;
@@ -201,15 +181,13 @@ export default class CanvasGraphicsRenderer
                 context.quadraticCurveTo(rx, ry, rx, ry + radius);
                 context.closePath();
 
-                if (data.fillColor || data.fillColor === 0)
-                {
+                if (data.fillColor || data.fillColor === 0) {
                     context.globalAlpha = data.fillAlpha * worldAlpha;
                     context.fillStyle = `#${(`00000${(fillColor | 0).toString(16)}`).substr(-6)}`;
                     context.fill();
                 }
 
-                if (data.lineWidth)
-                {
+                if (data.lineWidth) {
                     context.globalAlpha = data.lineAlpha * worldAlpha;
                     context.strokeStyle = `#${(`00000${(lineColor | 0).toString(16)}`).substr(-6)}`;
                     context.stroke();
@@ -225,16 +203,14 @@ export default class CanvasGraphicsRenderer
      * @private
      * @param {PIXI.Graphics} graphics - the graphics that will have its tint updated
      */
-    updateGraphicsTint(graphics)
-    {
+    updateGraphicsTint(graphics) {
         graphics._prevTint = graphics.tint;
 
         const tintR = ((graphics.tint >> 16) & 0xFF) / 255;
         const tintG = ((graphics.tint >> 8) & 0xFF) / 255;
         const tintB = (graphics.tint & 0xFF) / 255;
 
-        for (let i = 0; i < graphics.graphicsData.length; ++i)
-        {
+        for (let i = 0; i < graphics.graphicsData.length; ++i) {
             const data = graphics.graphicsData[i];
 
             const fillColor = data.fillColor | 0;
@@ -262,17 +238,14 @@ export default class CanvasGraphicsRenderer
      * @param {boolean} close - Should the polygon be closed
      * @param {CanvasRenderingContext2D} context - The rendering context to use
      */
-    renderPolygon(points, close, context)
-    {
+    renderPolygon(points, close, context) {
         context.moveTo(points[0], points[1]);
 
-        for (let j = 1; j < points.length / 2; ++j)
-        {
+        for (let j = 1; j < points.length / 2; ++j) {
             context.lineTo(points[j * 2], points[(j * 2) + 1]);
         }
 
-        if (close)
-        {
+        if (close) {
             context.closePath();
         }
     }
@@ -281,8 +254,7 @@ export default class CanvasGraphicsRenderer
      * destroy graphics object
      *
      */
-    destroy()
-    {
+    destroy() {
         this.renderer = null;
     }
 }

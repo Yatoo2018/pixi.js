@@ -3,6 +3,8 @@
  *
  * Ignored from docs since it is not directly exposed.
  *
+ * 二次贝塞尔曲线，公式可以在网上搜索到
+ *
  * @ignore
  * @param {number} fromX - Starting point x
  * @param {number} fromY - Starting point y

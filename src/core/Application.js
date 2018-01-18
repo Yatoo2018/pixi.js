@@ -8,6 +8,8 @@ import { UPDATE_PRIORITY } from './const';
  * Convenience class to create a new PIXI application.
  * This class automatically creates the renderer, ticker
  * and root container.
+ * 方便的创建一个新的PIXI应用
+ * 该类自动创建渲染器，ticker和根容器
  *
  * @example
  * // Create the application
@@ -28,8 +30,8 @@ export default class Application
     /**
      * @param {object} [options] - The optional renderer parameters
      * @param {boolean} [options.autoStart=true] - automatically starts the rendering after the construction.
-     *     Note that setting this parameter to false does NOT stop the shared ticker even if you set
-     *     options.sharedTicker to true in case that it is already started. Stop it by your own.
+     *     Note that setting this parameter to false does NOT stop the shared ticker
+     *     even if you set options.sharedTicker to true in case that it is already started. Stop it by your own.
      * @param {number} [options.width=800] - the width of the renderers view
      * @param {number} [options.height=600] - the height of the renderers view
      * @param {HTMLCanvasElement} [options.view] - the canvas to use as a view, optional

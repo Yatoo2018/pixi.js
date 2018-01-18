@@ -55,6 +55,10 @@ export default class Ticker
          * and is scaled with {@link PIXI.ticker.Ticker#speed}.
          * **Note:** The cap may be exceeded by scaling.
          *
+         * 时间增量，上一帧到这一帧的间隔时间
+         * 该值可通过设置minFPS来覆盖
+         * 也可以通过设置speed缩放
+         *
          * @member {number}
          * @default 1
          */
@@ -67,6 +71,8 @@ export default class Ticker
          * If the platform supports DOMHighResTimeStamp,
          * this value will have a precision of 1 µs.
          * Defaults to target frame time
+         *
+         * 一帧的时间间隔，默认为16.66毫秒
          *
          * @member {number}
          * @default 16.66
@@ -354,6 +360,9 @@ export default class Ticker
      * This method will be called automatically by animation
      * frame callbacks if the ticker instance has been started
      * and listeners are added.
+     * 触发一个更新。一个更新必须设置elapsedMS,deltaTime,
+     * 调用所有侦听,最后设置lastTime
+     * 当ticker实例开始或者有侦听事件被添加，该方法会自动执行
      *
      * @param {number} [currentTime=performance.now()] - the current time of execution
      */

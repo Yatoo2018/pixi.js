@@ -11,7 +11,12 @@ import settings from '../settings';
  * to the display list directly. Instead use it as the texture for a Sprite. If no frame is provided
  * then the whole image is used.
  *
+ * 一张纹理存储的信息代表一张图片或者图片的一部分。它不能直接被添加到显示对象列表。
+ * 可以将它附在一个Sprite上，将Sprite添加到显示对象列表。如果没有限制信息，则使用整张图片。
+ *
  * You can directly create a texture from an image and then reuse it multiple times like this :
+ *
+ * 你可以直接从图片创建一个纹理，可以像下面这样多次重用
  *
  * ```js
  * let texture = PIXI.Texture.fromImage('assets/image.png');
@@ -286,6 +291,8 @@ export default class Texture extends EventEmitter
     /**
      * Helper function that creates a Texture object from the given image url.
      * If the image is not in the texture cache it will be  created and loaded.
+     * 从给定的 url 创建一个纹理对象
+     * 如果该图片未缓存，则创建一个loaded
      *
      * @static
      * @param {string} imageUrl - The image url of the texture

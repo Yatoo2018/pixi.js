@@ -25,8 +25,12 @@ const hitTestEvent = {
  * The interaction manager deals with mouse, touch and pointer events. Any DisplayObject can be interactive
  * if its interactive parameter is set to true
  * This manager also supports multitouch.
+ * 该类处理mouse、touch、pointer事件。任何显示对象的交互。
+ * 如果它的交互参数设置为true
+ * 该管理类将会支持多点触碰
  *
  * An instance of this class is automatically created by default, and can be found at renderer.plugins.interaction
+ * 这个类的实例默认会被创建，你可以在renderer.plugins.interaction中找到
  *
  * @class
  * @extends EventEmitter

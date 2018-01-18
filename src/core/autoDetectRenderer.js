@@ -7,6 +7,8 @@ import WebGLRenderer from './renderers/webgl/WebGLRenderer';
  * This helper function will automatically detect which renderer you should be using.
  * WebGL is the preferred renderer as it is a lot faster. If webGL is not supported by
  * the browser then this function will return a canvas renderer
+ * 这个帮助方法将决定使用哪种渲染方式
+ * WebGL是首选的渲染方式，如果WebGL不被支持，将使用canvas渲染
  *
  * @memberof PIXI
  * @function autoDetectRenderer

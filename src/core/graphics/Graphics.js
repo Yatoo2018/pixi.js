@@ -635,6 +635,7 @@ export default class Graphics extends Container
 
     /**
      * Draws a circle.
+     * 绘制一个圆
      *
      * @param {number} x - The X coordinate of the center of the circle
      * @param {number} y - The Y coordinate of the center of the circle
@@ -1032,6 +1033,7 @@ export default class Graphics extends Container
     /**
      * Draws the given shape to this Graphics object. Can be any of Circle, Rectangle, Ellipse, Line or Polygon.
      * 绘制给定的图形。可以是Circle、Rectangle、Ellipse、Line、Polygon
+     * 这里将shape初始化为GraphicsData，然后存入this.graphicsData，等待下一帧绘制
      *
      * @param {PIXI.Circle|PIXI.Ellipse|PIXI.Polygon|PIXI.Rectangle|PIXI.RoundedRectangle} shape - The shape object to draw.
      * @return {PIXI.GraphicsData} The generated GraphicsData object.

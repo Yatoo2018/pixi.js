@@ -29,12 +29,14 @@ export default function trimCanvas(canvas)
     let x;
     let y;
 
+    // 每4个值代表一个像素，如果是1000*1000的舞台，则有4000000个像素点需要遍历
     for (i = 0; i < len; i += 4)
     {
+        // 像素点不是透明像素，计算非透明像素形成的区域
         if (pixels[i + 3] !== 0)
         {
-            x = (i / 4) % width;
-            y = ~~((i / 4) / width);
+            x = (i / 4) % width;// 列
+            y = ~~((i / 4) / width);// 行
 
             if (bound.top === null)
             {

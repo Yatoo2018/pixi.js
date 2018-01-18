@@ -2,6 +2,7 @@ import settings from '../../../settings';
 
 /**
  * Creates a Canvas element of the given size.
+ * 根据给定的size创建一个canvas元素
  *
  * @class
  * @memberof PIXI

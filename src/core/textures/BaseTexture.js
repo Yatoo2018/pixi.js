@@ -739,6 +739,7 @@ export default class BaseTexture extends EventEmitter
      * The source can be - image url, image element, canvas element. If the
      * source is an image url or an image element and not in the base texture
      * cache, it will be created and loaded.
+     * source可以是图片url，图片对象，canvas对象，如果没有缓存，则创建一个loaded
      *
      * @static
      * @param {string|HTMLImageElement|HTMLCanvasElement} source - The source to create base texture from.
