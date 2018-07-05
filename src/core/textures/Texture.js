@@ -26,6 +26,9 @@ import settings from '../settings';
  *
  * Textures made from SVGs, loaded or not, cannot be used before the file finishes processing.
  * You can check for this by checking the sprite's _textureID property.
+ *
+ * 从svg创建纹理，在文件加载完成之前不能够被使用
+ *
  * ```js
  * var texture = PIXI.Texture.fromImage('assets/image.svg');
  * var sprite1 = new PIXI.Sprite(texture);
@@ -40,10 +43,15 @@ import settings from '../settings';
 export default class Texture extends EventEmitter
 {
     /**
+     * 纹理原始文件
      * @param {PIXI.BaseTexture} baseTexture - The base texture source to create the texture from
+     * 纹理用来显示的区域
      * @param {PIXI.Rectangle} [frame] - The rectangle frame of the texture to show
+     * 在原始纹理上的区域
      * @param {PIXI.Rectangle} [orig] - The area of original texture
+     * 原始纹理修建之后的区域
      * @param {PIXI.Rectangle} [trim] - Trimmed rectangle of original texture
+     * 指明纹理是如何通过纹理包装器的
      * @param {number} [rotate] - indicates how the texture was rotated by texture packer. See {@link PIXI.GroupD8}
      */
     constructor(baseTexture, frame, orig, trim, rotate)
