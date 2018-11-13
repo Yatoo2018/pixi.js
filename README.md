@@ -1,14 +1,14 @@
 PixiJS — The HTML5 Creation Engine
 =============
 
-![pixi.js logo](http://www.goodboydigital.com/pixijs/pixiV4_wide_full.jpg)
+![pixi.js logo](http://pixijs.download/pixijs-banner.png)
 
 [![Inline docs](http://inch-ci.org/github/pixijs/pixi.js.svg?branch=dev)](http://inch-ci.org/github/pixijs/pixi.js)
 [![Build Status](https://travis-ci.org/pixijs/pixi.js.svg?branch=dev)](https://travis-ci.org/pixijs/pixi.js)
 
 开发本产品的目的是为了让所有设备上都能运行的一个轻量化的、快速的2D引擎库。PixiJS渲染器让所有人都能在不用了解WebGL知识的情况下体验硬件加速的快感。而且，它很快，真的真快。
 
-If you want to keep up to date with the latest PixiJS news then feel free to follow us on twitter
+If you want to keep up to date with the latest PixiJS news then feel free to follow us on Twitter
 ([@doormat23](https://twitter.com/doormat23), [@rolnaaba](https://twitter.com/rolnaaba), [@bigtimebuddy](https://twitter.com/bigtimebuddy), [@ivanpopelyshev](https://twitter.com/ivanpopelyshev))
 and we will keep you posted! You can also check back on [our site](http://www.pixijs.com)
 as any breakthroughs will be posted up there too!
@@ -24,10 +24,18 @@ PixiJS完全支持[WebGL](https://en.wikipedia.org/wiki/WebGL) ，而且如果�
 **Boost your development and feel free to use your imagination!**
 
 ### 学习 ###
+
 - 网站: 更多关于PixiJS [官网](http://www.pixijs.com/).
 - 如何开始: 访问@kittykatattack的综合[教程](https://github.com/kittykatattack/learningPixi).
 - 示例: 找到玩转PixiJS的正确切入点[demo](http://pixijs.github.io/examples/)!
 - 文档: 查看PixiJS的API[文档](https://pixijs.github.io/docs/).
+
+### Learn ###
+
+- Website: Find out more about PixiJS on the [official website](http://www.pixijs.com/).
+- Getting started: Check out @kittykatattack's comprehensive [tutorial](https://github.com/kittykatattack/learningPixi).
+- Examples: Get stuck right in and play around with PixiJS code and features right [here](http://pixijs.github.io/examples/)!
+- Docs: Get to know the PixiJS API by checking out the [docs](https://pixijs.github.io/docs/).
 - Wiki: Other misc tutorials and resources are [on the Wiki](https://github.com/pixijs/pixi.js/wiki).
 
 ### 社区 ###
@@ -46,27 +54,31 @@ _Note: After v4.5.0, support for the [Bower](https://bower.io) package manager h
 
 #### NPM 安装
 
+```sh
+npm install pixi.js
 ```
-$> npm install pixi.js
+There is no default export. The correct way to import PixiJS is:
+
+```js
+import * as PIXI from 'pixi.js'
 ```
 
 #### CDN 安装 (via cdnjs)
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.1/pixi.min.js"></script>
 ```
 
 _注意: `4.5.1` 可被替换为任何[版本](https://github.com/pixijs/pixi.js/releases) ._
+_Note: `4.7.1` can be replaced by any [released](https://github.com/pixijs/pixi.js/releases) version._
 
 ### Demos ###
 
-- [WebGL Filters!](http://pixijs.github.io/pixi-filters/examples/)
-- [Run pixie run](http://www.goodboydigital.com/runpixierun)
-- [Fight for Everyone](http://www.goodboydigital.com/casestudies/fightforeveryone)
+- [Filters Demo](http://pixijs.io/pixi-filters/tools/demo/)
+- [Run Pixie Run](http://work.goodboydigital.com/runpixierun/)
 - [Flash vs HTML](http://flashvhtml.com)
 - [Bunny Demo](http://www.goodboydigital.com/pixijs/bunnymark)
 - [Storm Brewing](http://www.goodboydigital.com/pixijs/storm)
-- [Filters Demo](http://www.goodboydigital.com/pixijs/examples/15/indexAll.html)
 - [Render Texture Demo](http://www.goodboydigital.com/pixijs/examples/11)
 - [Primitives Demo](http://www.goodboydigital.com/pixijs/examples/13)
 - [Masking Demo](http://www.goodboydigital.com/pixijs/examples/14)
@@ -83,7 +95,7 @@ Want to be part of the PixiJS project? Great! All are welcome! We will get there
 together :) Whether you find a bug, have a great feature request or you fancy owning a task
 from the road map above feel free to get in touch.
 
-Make sure to read the [Contributing Guide](https://github.com/pixijs/pixi.js/blob/master/CONTRIBUTING.md)
+Make sure to read the [Contributing Guide](.github/CONTRIBUTING.md)
 before submitting changes.
 
 ### 新特性 ###
@@ -110,18 +122,17 @@ before submitting changes.
 ```js
 // The application will create a renderer using WebGL, if possible,
 // with a fallback to a canvas render. It will also setup the ticker
-// and the root stage PIXI.Container.
-var app = new PIXI.Application();
+// and the root stage PIXI.Container
+const app = new PIXI.Application();
 
 // The application will create a canvas element for you that you
-// can then insert into the DOM.
+// can then insert into the DOM
 document.body.appendChild(app.view);
 
 // load the texture we need
-PIXI.loader.add('bunny', 'bunny.png').load(function(loader, resources) {
-
-    // This creates a texture from a 'bunny.png' image.
-    var bunny = new PIXI.Sprite(resources.bunny.texture);
+PIXI.loader.add('bunny', 'bunny.png').load((loader, resources) => {
+    // This creates a texture from a 'bunny.png' image
+    const bunny = new PIXI.Sprite(resources.bunny.texture);
 
     // Setup the position of the bunny
     bunny.x = app.renderer.width / 2;
@@ -131,11 +142,11 @@ PIXI.loader.add('bunny', 'bunny.png').load(function(loader, resources) {
     bunny.anchor.x = 0.5;
     bunny.anchor.y = 0.5;
 
-    // Add the bunny to the scene we are building.
+    // Add the bunny to the scene we are building
     app.stage.addChild(bunny);
 
     // Listen for frame updates
-    app.ticker.add(function() {
+    app.ticker.add(() => {
          // each frame we spin the bunny around a bit
         bunny.rotation += 0.01;
     });
@@ -148,36 +159,36 @@ PIXI.loader.add('bunny', 'bunny.png').load(function(loader, resources) {
 你只有在开发它的时候才需要构建它。
 如果你没有Node.js和NPM，请安装，然后用NPM在克隆目录安装和构建依赖：
 
-```
-$> npm install
+```sh
+npm install
 ```
 
 然后，构建源码，运行：
 
-```
-$> npm run dist
+```sh
+npm run dist
 ```
 
 这样会产生带有全插件的压缩的版本`dist/pixi.min.js` ，还有一个未压缩的版本`dist/pixi.js`
 
 如果有个别插件你不想要的话，加入命令"interaction"、 "extras"
 
-```
-$> npm run dist -- --exclude extras --exclude interaction
+```sh
+npm run dist -- --exclude extras --exclude interaction
 ```
 
 简化版命令 `-e`:
 
-```
-$> npm run dist -- -e extras -e interaction -e filters
+```sh
+npm run dist -- -e extras -e interaction -e filters
 ```
 
 ### 如何生成文档 ###
 
 生成文档命令:
 
-```
-$> npm run docs
+```sh
+npm run docs
 ```
 
 文档使用 [Jaguar.js](https://github.com/pixijs/jaguarjs-jsdoc) 和jsdoc, 配置文件[scripts/jsdoc.conf.json](scripts/jsdoc.conf.json)

@@ -58,6 +58,65 @@ describe('PIXI.loaders.spritesheetParser', function ()
             .with.keys(Object.keys(getJsonSpritesheet().frames))
             .and.has.property('0.png')
                 .that.is.an.instanceof(PIXI.Texture);
+
+        expect(res.textures['0.png'].frame.x).to.equal(14);
+        expect(res.textures['0.png'].frame.y).to.equal(28);
+        expect(res.textures['0.png'].defaultAnchor.x).to.equal(0.3);
+        expect(res.textures['0.png'].defaultAnchor.y).to.equal(0.4);
+        expect(res.textures['1.png'].defaultAnchor.x).to.equal(0.0); // default of defaultAnchor is 0,0
+        expect(res.textures['1.png'].defaultAnchor.y).to.equal(0.0);
+
+        expect(res).to.have.property('spritesheet')
+            .to.have.property('animations')
+            .to.have.property('png123');
+        expect(res.spritesheet.animations.png123.length).to.equal(3);
+        expect(res.spritesheet.animations.png123[0]).to.equal(res.textures['1.png']);
+    });
+
+    it('should not load binary images as an image loader type', function (done)
+    {
+        const loader = new PIXI.loaders.Loader();
+
+        // provide a mock pre-loader that creates an empty base texture for compressed texture assets
+        // this is necessary because the spritesheetParser expects a baseTexture on the resource
+        loader.pre((resource, next) =>
+        {
+            if (resource.extension === 'crn')
+            {
+                resource.texture = PIXI.Texture.EMPTY;
+            }
+            next();
+        })
+        .add(`atlas_crn`, path.join(__dirname, 'resources', 'atlas_crn.json'))
+        .add(`atlas`, path.join(__dirname, 'resources', 'atlas.json'))
+        .load((loader, resources) =>
+        {
+            expect(resources.atlas_image.data).to.be.instanceof(HTMLImageElement);
+            expect(resources.atlas_crn_image.data).to.not.be.instanceof(HTMLImageElement);
+            loader.reset();
+            done();
+        });
+    });
+
+    it('should dispatch an error failing to load spritesheet image', function (done)
+    {
+        const spy = sinon.spy((error, ldr, res) =>
+        {
+            expect(res.name).to.equal('atlas_image');
+            expect(res.error).to.equal(error);
+            expect(error.toString()).to.have.string('Failed to load element using: IMG');
+        });
+        const loader = new PIXI.loaders.Loader();
+
+        loader.add('atlas', path.join(__dirname, 'resources', 'atlas_error.json'));
+        loader.onError.add(spy);
+        loader.load((loader, resources) =>
+        {
+            expect(resources.atlas_image.error).to.be.instanceof(Error);
+            expect(spy.calledOnce).to.be.true;
+            loader.reset();
+            done();
+        });
     });
 
     it('should build the image url', function ()
@@ -125,7 +184,8 @@ function getJsonSpritesheet()
         "rotated": false,
         "trimmed": false,
         "spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
-        "sourceSize": {"w":14,"h":14}
+        "sourceSize": {"w":14,"h":14},
+        "anchor": {"x":0.3,"y":0.4}
     },
     "1.png":
     {
@@ -199,6 +259,9 @@ function getJsonSpritesheet()
         "spriteSourceSize": {"x":0,"y":0,"w":14,"h":14},
         "sourceSize": {"w":14,"h":14}
     }},
+    "animations": {
+        "png123": [ "1.png", "2.png", "3.png" ]
+    },
     "meta": {
         "app": "http://www.texturepacker.com",
         "version": "1.0",

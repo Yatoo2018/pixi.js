@@ -30,14 +30,25 @@ const defaultStyle = {
     strokeThickness: 0,
     textBaseline: 'alphabetic',
     trim: false,
+    whiteSpace: 'pre',
     wordWrap: false,
     wordWrapWidth: 100,
     leading: 0,
 };
 
+const genericFontFamilies = [
+    'serif',
+    'sans-serif',
+    'monospace',
+    'cursive',
+    'fantasy',
+    'system-ui',
+]
+
 /**
  * A TextStyle Object decorates a Text Object. It can be shared between
  * multiple Text objects. Changing the style will update all text objects using it.
+ * It can be generated [here](https://pixijs.io/pixi-text-style).
  *
  * @class
  * @memberof PIXI
@@ -87,6 +98,8 @@ export default class TextStyle
      *  Default is 0 (no stroke)
      * @param {boolean} [style.trim=false] - Trim transparent borders
      * @param {string} [style.textBaseline='alphabetic'] - The baseline of the text that is rendered.
+     * @param {boolean} [style.whiteSpace='pre'] - Determines whether newlines & spaces are collapsed or preserved "normal"
+     *      (collapse, collapse), "pre" (preserve, preserve) | "pre-line" (preserve, collapse). It needs wordWrap to be set to true
      * @param {boolean} [style.wordWrap=false] - Indicates if word wrap should be used
      * @param {number} [style.wordWrapWidth=100] - The width at which text will wrap, it needs wordWrap to be set to true
      */
@@ -607,6 +620,31 @@ export default class TextStyle
     }
 
     /**
+     * How newlines and spaces should be handled.
+     * Default is 'pre' (preserve, preserve).
+     *
+     *  value       | New lines     |   Spaces
+     *  ---         | ---           |   ---
+     * 'normal'     | Collapse      |   Collapse
+     * 'pre'        | Preserve      |   Preserve
+     * 'pre-line'   | Preserve      |   Collapse
+     *
+     * @member {string}
+     */
+    get whiteSpace()
+    {
+        return this._whiteSpace;
+    }
+    set whiteSpace(whiteSpace) // eslint-disable-line require-jsdoc
+    {
+        if (this._whiteSpace !== whiteSpace)
+        {
+            this._whiteSpace = whiteSpace;
+            this.styleID++;
+        }
+    }
+
+    /**
      * Indicates if word wrap should be used
      *
      * @member {boolean}
@@ -666,8 +704,8 @@ export default class TextStyle
             // Trim any extra white-space
             let fontFamily = fontFamilies[i].trim();
 
-            // Check if font already contains strings
-            if (!(/([\"\'])[^\'\"]+\1/).test(fontFamily))
+            // Check if font is already escaped in quotes except for CSS generic fonts
+            if (!(/([\"\'])[^\'\"]+\1/).test(fontFamily) && genericFontFamilies.indexOf(fontFamily) < 0)
             {
                 fontFamily = `"${fontFamily}"`;
             }
@@ -680,7 +718,7 @@ export default class TextStyle
 
 /**
  * Utility function to convert hexadecimal colors to strings, and simply return the color if it's a string.
- *
+ * @private
  * @param {number|number[]} color
  * @return {string} The color as a string.
  */
@@ -704,7 +742,7 @@ function getSingleColor(color)
 /**
  * Utility function to convert hexadecimal colors to strings, and simply return the color if it's a string.
  * This version can also convert array of colors
- *
+ * @private
  * @param {number|number[]} color
  * @return {string} The color as a string.
  */
@@ -728,7 +766,7 @@ function getColor(color)
 /**
  * Utility function to convert hexadecimal colors to strings, and simply return the color if it's a string.
  * This version can also convert array of colors
- *
+ * @private
  * @param {Array} array1 First array to compare
  * @param {Array} array2 Second array to compare
  * @return {boolean} Do the arrays contain the same values in the same order
@@ -758,7 +796,7 @@ function areArraysEqual(array1, array2)
 
 /**
  * Utility function to ensure that object properties are copied by value, and not by reference
- *
+ * @private
  * @param {Object} target Target object to copy properties into
  * @param {Object} source Source object for the proporties to copy
  * @param {string} propertyObj Object containing properties names we want to loop over

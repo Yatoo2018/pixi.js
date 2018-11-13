@@ -189,7 +189,7 @@ export default class AccessibilityManager
 
         this.isActive = false;
 
-        window.document.removeEventListener('mousemove', this._onMouseMove);
+        window.document.removeEventListener('mousemove', this._onMouseMove, true);
         window.addEventListener('keydown', this._onKeyDown, false);
 
         this.renderer.off('postrender', this.update);
@@ -225,7 +225,7 @@ export default class AccessibilityManager
 
         const children = displayObject.children;
 
-        for (let i = children.length - 1; i >= 0; i--)
+        for (let i = 0; i < children.length; i++)
         {
             this.updateAccessibleObjects(children[i]);
         }
@@ -303,6 +303,17 @@ export default class AccessibilityManager
 
                     div.style.width = `${hitArea.width * sx}px`;
                     div.style.height = `${hitArea.height * sy}px`;
+
+                    // update button titles and hints if they exist and they've changed
+                    if (div.title !== child.accessibleTitle && child.accessibleTitle !== null)
+                    {
+                        div.title = child.accessibleTitle;
+                    }
+                    if (div.getAttribute('aria-label') !== child.accessibleHint
+                        && child.accessibleHint !== null)
+                    {
+                        div.setAttribute('aria-label', child.accessibleHint);
+                    }
                 }
             }
         }
@@ -364,21 +375,45 @@ export default class AccessibilityManager
             div.style.zIndex = DIV_TOUCH_ZINDEX;
             div.style.borderStyle = 'none';
 
+            // ARIA attributes ensure that button title and hint updates are announced properly
+            if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
+            {
+                // Chrome doesn't need aria-live to work as intended; in fact it just gets more confused.
+                div.setAttribute('aria-live', 'off');
+            }
+            else
+            {
+                div.setAttribute('aria-live', 'polite');
+            }
+
+            if (navigator.userAgent.match(/rv:.*Gecko\//))
+            {
+                // FireFox needs this to announce only the new button name
+                div.setAttribute('aria-relevant', 'additions');
+            }
+            else
+            {
+                // required by IE, other browsers don't much care
+                div.setAttribute('aria-relevant', 'text');
+            }
+
             div.addEventListener('click', this._onClick.bind(this));
             div.addEventListener('focus', this._onFocus.bind(this));
             div.addEventListener('focusout', this._onFocusOut.bind(this));
         }
 
-        if (displayObject.accessibleTitle)
+        if (displayObject.accessibleTitle && displayObject.accessibleTitle !== null)
         {
             div.title = displayObject.accessibleTitle;
         }
-        else if (!displayObject.accessibleTitle && !displayObject.accessibleHint)
+        else if (!displayObject.accessibleHint
+                 || displayObject.accessibleHint === null)
         {
-            div.title = `displayObject ${this.tabIndex}`;
+            div.title = `displayObject ${displayObject.tabIndex}`;
         }
 
-        if (displayObject.accessibleHint)
+        if (displayObject.accessibleHint
+            && displayObject.accessibleHint !== null)
         {
             div.setAttribute('aria-label', displayObject.accessibleHint);
         }
@@ -415,6 +450,10 @@ export default class AccessibilityManager
      */
     _onFocus(e)
     {
+        if (!e.target.getAttribute('aria-live', 'off'))
+        {
+            e.target.setAttribute('aria-live', 'assertive');
+        }
         const interactionManager = this.renderer.plugins.interaction;
 
         interactionManager.dispatchEvent(e.target.displayObject, 'mouseover', interactionManager.eventData);
@@ -428,6 +467,10 @@ export default class AccessibilityManager
      */
     _onFocusOut(e)
     {
+        if (!e.target.getAttribute('aria-live', 'off'))
+        {
+            e.target.setAttribute('aria-live', 'polite');
+        }
         const interactionManager = this.renderer.plugins.interaction;
 
         interactionManager.dispatchEvent(e.target.displayObject, 'mouseout', interactionManager.eventData);
@@ -453,9 +496,15 @@ export default class AccessibilityManager
      * Is called when the mouse moves across the renderer element
      *
      * @private
+     * @param {MouseEvent} e - The mouse event.
      */
-    _onMouseMove()
+    _onMouseMove(e)
     {
+        if (e.movementX === 0 && e.movementY === 0)
+        {
+            return;
+        }
+
         this.deactivate();
     }
 
@@ -472,7 +521,7 @@ export default class AccessibilityManager
             this.children[i].div = null;
         }
 
-        window.document.removeEventListener('mousemove', this._onMouseMove);
+        window.document.removeEventListener('mousemove', this._onMouseMove, true);
         window.removeEventListener('keydown', this._onKeyDown);
 
         this.pool = null;

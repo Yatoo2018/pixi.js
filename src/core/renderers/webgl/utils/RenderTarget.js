@@ -118,6 +118,13 @@ export default class RenderTarget
         this.filterData = null;
 
         /**
+         * The key for pooled texture of FilterSystem
+         * @private
+         * @member {string}
+         */
+        this.filterPoolKey = '';
+
+        /**
          * The scale mode.
          *
          * @member {number}
@@ -212,7 +219,7 @@ export default class RenderTarget
      */
     activate()
     {
-        // TOOD refactor usage of frame..
+        // TODO refactor usage of frame..
         const gl = this.gl;
 
         // make sure the texture is unbound!
