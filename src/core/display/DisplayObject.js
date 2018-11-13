@@ -499,7 +499,7 @@ export default class DisplayObject extends EventEmitter {
     }
 
     /**
-     * The pivot point of the displayObject that it rotates around
+     * The pivot point of the displayObject that it rotates around.
      * Assignment by value since pixi-v4.
      *
      * @member {PIXI.Point|PIXI.ObservablePoint}
@@ -587,12 +587,14 @@ export default class DisplayObject extends EventEmitter {
     {
         if (this._mask) {
             this._mask.renderable = true;
+            this._mask.isMask = false;
         }
 
         this._mask = value;
 
         if (this._mask) {
             this._mask.renderable = false;
+            this._mask.isMask = true;
         }
     }
 

@@ -136,6 +136,7 @@ export default class CanvasRenderer extends SystemRenderer
      * 绘制前是否清理canvas
      * @param {PIXI.Transform} [transform] - A transformation to be applied
      * 一个被应用的transform
+     * @param {PIXI.Matrix} [transform] - A transformation to be applied
      * @param {boolean} [skipUpdateTransform=false] - Whether to skip the update transform
      * 是否跳过transform更新
      */

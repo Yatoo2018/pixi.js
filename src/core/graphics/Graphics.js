@@ -5,7 +5,7 @@ import GraphicsData from './GraphicsData';
 import Sprite from '../sprites/Sprite';
 import { Matrix, Point, Rectangle, RoundedRectangle, Ellipse, Polygon, Circle } from '../math';
 import { hex2rgb, rgb2hex } from '../utils';
-import { SHAPES, BLEND_MODES } from '../const';
+import { SHAPES, BLEND_MODES, PI_2 } from '../const';
 import Bounds from '../display/Bounds';
 import bezierCurveTo from './utils/bezierCurveTo';
 import CanvasRenderer from '../renderers/canvas/CanvasRenderer';
@@ -66,6 +66,14 @@ export default class Graphics extends Container
          * @default 0
          */
         this.lineColor = 0;
+
+        /**
+         * The alignment of any lines drawn (0.5 = middle, 1 = outter, 0 = inner).
+         *
+         * @member {number}
+         * @default 0
+         */
+        this.lineAlignment = 0.5;
 
         /**
          * Graphics data
@@ -181,6 +189,9 @@ export default class Graphics extends Container
         this._spriteRect = null;
         this._fastRect = false;
 
+        this._prevRectTint = null;
+        this._prevRectFillColor = null;
+
         /**
          * When cacheAsBitmap is set to true the graphics object will be rendered as if it was a sprite.
          * This is useful if your graphics element does not change often, as it will speed up the rendering
@@ -215,6 +226,7 @@ export default class Graphics extends Container
         clone.fillAlpha = this.fillAlpha;
         clone.lineWidth = this.lineWidth;
         clone.lineColor = this.lineColor;
+        clone.lineAlignment = this.lineAlignment;
         clone.tint = this.tint;
         clone.blendMode = this.blendMode;
         clone.isMask = this.isMask;
@@ -236,6 +248,125 @@ export default class Graphics extends Container
     }
 
     /**
+     * Calculate length of quadratic curve
+     * @see {@link http://www.malczak.linuxpl.com/blog/quadratic-bezier-curve-length/}
+     * for the detailed explanation of math behind this.
+     *
+     * @private
+     * @param {number} fromX - x-coordinate of curve start point
+     * @param {number} fromY - y-coordinate of curve start point
+     * @param {number} cpX - x-coordinate of curve control point
+     * @param {number} cpY - y-coordinate of curve control point
+     * @param {number} toX - x-coordinate of curve end point
+     * @param {number} toY - y-coordinate of curve end point
+     * @return {number} Length of quadratic curve
+     */
+    _quadraticCurveLength(fromX, fromY, cpX, cpY, toX, toY)
+    {
+        const ax = fromX - ((2.0 * cpX) + toX);
+        const ay = fromY - ((2.0 * cpY) + toY);
+        const bx = 2.0 * ((cpX - 2.0) * fromX);
+        const by = 2.0 * ((cpY - 2.0) * fromY);
+        const a = 4.0 * ((ax * ax) + (ay * ay));
+        const b = 4.0 * ((ax * bx) + (ay * by));
+        const c = (bx * bx) + (by * by);
+
+        const s = 2.0 * Math.sqrt(a + b + c);
+        const a2 = Math.sqrt(a);
+        const a32 = 2.0 * a * a2;
+        const c2 = 2.0 * Math.sqrt(c);
+        const ba = b / a2;
+
+        return (
+                (a32 * s)
+                + (a2 * b * (s - c2))
+                + (
+                   ((4.0 * c * a) - (b * b))
+                   * Math.log(((2.0 * a2) + ba + s) / (ba + c2))
+                  )
+               )
+               / (4.0 * a32);
+    }
+
+    /**
+     * Calculate length of bezier curve.
+     * Analytical solution is impossible, since it involves an integral that does not integrate in general.
+     * Therefore numerical solution is used.
+     *
+     * @private
+     * @param {number} fromX - Starting point x
+     * @param {number} fromY - Starting point y
+     * @param {number} cpX - Control point x
+     * @param {number} cpY - Control point y
+     * @param {number} cpX2 - Second Control point x
+     * @param {number} cpY2 - Second Control point y
+     * @param {number} toX - Destination point x
+     * @param {number} toY - Destination point y
+     * @return {number} Length of bezier curve
+     */
+    _bezierCurveLength(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY)
+    {
+        const n = 10;
+        let result = 0.0;
+        let t = 0.0;
+        let t2 = 0.0;
+        let t3 = 0.0;
+        let nt = 0.0;
+        let nt2 = 0.0;
+        let nt3 = 0.0;
+        let x = 0.0;
+        let y = 0.0;
+        let dx = 0.0;
+        let dy = 0.0;
+        let prevX = fromX;
+        let prevY = fromY;
+
+        for (let i = 1; i <= n; ++i)
+        {
+            t = i / n;
+            t2 = t * t;
+            t3 = t2 * t;
+            nt = (1.0 - t);
+            nt2 = nt * nt;
+            nt3 = nt2 * nt;
+
+            x = (nt3 * fromX) + (3.0 * nt2 * t * cpX) + (3.0 * nt * t2 * cpX2) + (t3 * toX);
+            y = (nt3 * fromY) + (3.0 * nt2 * t * cpY) + (3 * nt * t2 * cpY2) + (t3 * toY);
+            dx = prevX - x;
+            dy = prevY - y;
+            prevX = x;
+            prevY = y;
+
+            result += Math.sqrt((dx * dx) + (dy * dy));
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculate number of segments for the curve based on its length to ensure its smoothness.
+     *
+     * @private
+     * @param {number} length - length of curve
+     * @return {number} Number of segments
+     */
+    _segmentsCount(length)
+    {
+        let result = Math.ceil(length / Graphics.CURVES.maxLength);
+
+        if (result < Graphics.CURVES.minSegments)
+        {
+            result = Graphics.CURVES.minSegments;
+        }
+        else if (result > Graphics.CURVES.maxSegments)
+        {
+            result = Graphics.CURVES.maxSegments;
+        }
+
+        return result;
+    }
+
+    /**
      * Specifies the line style used for subsequent calls to Graphics methods such as the lineTo()
      * method or the drawCircle() method.
      *
@@ -244,13 +375,15 @@ export default class Graphics extends Container
      * @param {number} [lineWidth=0] - width of the line to draw, will update the objects stored style
      * @param {number} [color=0] - color of the line to draw, will update the objects stored style
      * @param {number} [alpha=1] - alpha of the line to draw, will update the objects stored style
+     * @param {number} [alignment=0.5] - alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
      * @return {PIXI.Graphics} This Graphics object. Good for chaining method calls
      */
-    lineStyle(lineWidth = 0, color = 0, alpha = 1)
+    lineStyle(lineWidth = 0, color = 0, alpha = 1, alignment = 0.5)
     {
         this.lineWidth = lineWidth;
         this.lineColor = color;
         this.lineAlpha = alpha;
+        this.lineAlignment = alignment;
 
         if (this.currentPath)
         {
@@ -269,6 +402,7 @@ export default class Graphics extends Container
                 this.currentPath.lineWidth = this.lineWidth;
                 this.currentPath.lineColor = this.lineColor;
                 this.currentPath.lineAlpha = this.lineAlpha;
+                this.currentPath.lineAlignment = this.lineAlignment;
             }
         }
 
@@ -305,8 +439,16 @@ export default class Graphics extends Container
      */
     lineTo(x, y)
     {
-        this.currentPath.shape.points.push(x, y);
-        this.dirty++;
+        const points = this.currentPath.shape.points;
+
+        const fromX = points[points.length - 2];
+        const fromY = points[points.length - 1];
+
+        if (fromX !== x || fromY !== y)
+        {
+            points.push(x, y);
+            this.dirty++;
+        }
 
         return this;
     }
@@ -336,7 +478,6 @@ export default class Graphics extends Container
             this.moveTo(0, 0);
         }
 
-        const n = 20;
         const points = this.currentPath.shape.points;
         let xa = 0;
         let ya = 0;
@@ -348,6 +489,9 @@ export default class Graphics extends Container
 
         const fromX = points[points.length - 2];
         const fromY = points[points.length - 1];
+        const n = Graphics.CURVES.adaptive
+                  ? this._segmentsCount(this._quadraticCurveLength(fromX, fromY, cpX, cpY, toX, toY))
+                  : 20;
 
         for (let i = 1; i <= n; ++i)
         {
@@ -398,7 +542,11 @@ export default class Graphics extends Container
 
         points.length -= 2;
 
-        bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, points);
+        const n = Graphics.CURVES.adaptive
+                  ? this._segmentsCount(this._bezierCurveLength(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY))
+                  : 20;
+
+        bezierCurveTo(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY, n, points);
 
         this.dirty++;
 
@@ -497,15 +645,17 @@ export default class Graphics extends Container
 
         if (!anticlockwise && endAngle <= startAngle)
         {
-            endAngle += Math.PI * 2;
+            endAngle += PI_2;
         }
         else if (anticlockwise && startAngle <= endAngle)
         {
-            startAngle += Math.PI * 2;
+            startAngle += PI_2;
         }
 
         const sweep = endAngle - startAngle;
-        const segs = Math.ceil(Math.abs(sweep) / (Math.PI * 2)) * 40;
+        const segs = Graphics.CURVES.adaptive
+                     ? this._segmentsCount(Math.abs(sweep) * radius)
+                     : Math.ceil(Math.abs(sweep) / PI_2) * 40;
 
         if (sweep === 0)
         {
@@ -520,7 +670,16 @@ export default class Graphics extends Container
 
         if (points)
         {
-            if (points[points.length - 2] !== startX || points[points.length - 1] !== startY)
+            // We check how far our start is from the last existing point
+            const xDiff = Math.abs(points[points.length - 2] - startX);
+            const yDiff = Math.abs(points[points.length - 1] - startY);
+
+            if (xDiff < 0.001 && yDiff < 0.001)
+            {
+                // If the point is very close, we don't add it, since this would lead to artifacts
+                // during tesselation due to floating point imprecision.
+            }
+            else
             {
                 points.push(startX, startY);
             }
@@ -707,6 +866,40 @@ export default class Graphics extends Container
     }
 
     /**
+     * Draw a star shape with an abitrary number of points.
+     *
+     * @param {number} x - Center X position of the star
+     * @param {number} y - Center Y position of the star
+     * @param {number} points - The number of points of the star, must be > 1
+     * @param {number} radius - The outer radius of the star
+     * @param {number} [innerRadius] - The inner radius between points, default half `radius`
+     * @param {number} [rotation=0] - The rotation of the star in radians, where 0 is vertical
+     * @return {PIXI.Graphics} This Graphics object. Good for chaining method calls
+     */
+    drawStar(x, y, points, radius, innerRadius, rotation = 0)
+    {
+        innerRadius = innerRadius || radius / 2;
+
+        const startAngle = (-1 * Math.PI / 2) + rotation;
+        const len = points * 2;
+        const delta = PI_2 / len;
+        const polygon = [];
+
+        for (let i = 0; i < len; i++)
+        {
+            const r = i % 2 ? innerRadius : radius;
+            const angle = (i * delta) + startAngle;
+
+            polygon.push(
+                x + (r * Math.cos(angle)),
+                y + (r * Math.sin(angle))
+            );
+        }
+
+        return this.drawPolygon(polygon);
+    }
+
+    /**
      * Clears the graphics that were drawn to this Graphics object, and resets fill and line style settings.
      *
      * @return {PIXI.Graphics} This Graphics object. Good for chaining method calls
@@ -716,9 +909,12 @@ export default class Graphics extends Container
         if (this.lineWidth || this.filling || this.graphicsData.length > 0)
         {
             this.lineWidth = 0;
+            this.lineAlignment = 0.5;
+
             this.filling = false;
 
             this.boundsDirty = -1;
+            this.canvasTintDirty = -1;
             this.dirty++;
             this.clearDirty++;
             this.graphicsData.length = 0;
@@ -786,17 +982,18 @@ export default class Graphics extends Container
         }
 
         const sprite = this._spriteRect;
+        const fillColor = this.graphicsData[0].fillColor;
 
         if (this.tint === 0xffffff)
         {
-            sprite.tint = this.graphicsData[0].fillColor;
+            sprite.tint = fillColor;
         }
-        else
+        else if (this.tint !== this._prevRectTint || fillColor !== this._prevRectFillColor)
         {
             const t1 = tempColor1;
             const t2 = tempColor2;
 
-            hex2rgb(this.graphicsData[0].fillColor, t1);
+            hex2rgb(fillColor, t1);
             hex2rgb(this.tint, t2);
 
             t1[0] *= t2[0];
@@ -804,7 +1001,11 @@ export default class Graphics extends Container
             t1[2] *= t2[2];
 
             sprite.tint = rgb2hex(t1);
+
+            this._prevRectTint = this.tint;
+            this._prevRectFillColor = fillColor;
         }
+
         sprite.alpha = this.graphicsData[0].fillAlpha;
         sprite.worldAlpha = this.worldAlpha * sprite.alpha;
         sprite.blendMode = this.blendMode;
@@ -1059,7 +1260,8 @@ export default class Graphics extends Container
             this.fillAlpha,
             this.filling,
             this.nativeLines,
-            shape
+            shape,
+            this.lineAlignment
         );
 
         this.graphicsData.push(data);
@@ -1067,7 +1269,7 @@ export default class Graphics extends Container
         // data.type=data.shape.type
         if (data.type === SHAPES.POLY)
         {
-            data.shape.closed = data.shape.closed || this.filling;
+            data.shape.closed = data.shape.closed;
             this.currentPath = data;
         }
 
@@ -1171,11 +1373,11 @@ export default class Graphics extends Container
         }
 
         // for each webgl data entry, destroy the WebGLGraphicsData
-        for (const id in this._webgl)
+        for (const id in this._webGL)
         {
-            for (let j = 0; j < this._webgl[id].data.length; ++j)
+            for (let j = 0; j < this._webGL[id].data.length; ++j)
             {
-                this._webgl[id].data[j].destroy();
+                this._webGL[id].data[j].destroy();
             }
         }
 
@@ -1187,10 +1389,32 @@ export default class Graphics extends Container
         this.graphicsData = null;
 
         this.currentPath = null;
-        this._webgl = null;
+        this._webGL = null;
         this._localBounds = null;
     }
 
 }
 
 Graphics._SPRITE_TEXTURE = null;
+
+/**
+ * Graphics curves resolution settings. If `adaptive` flag is set to `true`,
+ * the resolution is calculated based on the curve's length to ensure better visual quality.
+ * Adaptive draw works with `bezierCurveTo` and `quadraticCurveTo`.
+ *
+ * @static
+ * @constant
+ * @memberof PIXI.Graphics
+ * @name CURVES
+ * @type {object}
+ * @property {boolean} adaptive=false - flag indicating if the resolution should be adaptive
+ * @property {number} maxLength=10 - maximal length of a single segment of the curve (if adaptive = false, ignored)
+ * @property {number} minSegments=8 - minimal number of segments in the curve (if adaptive = false, ignored)
+ * @property {number} maxSegments=2048 - maximal number of segments in the curve (if adaptive = false, ignored)
+ */
+Graphics.CURVES = {
+    adaptive: false,
+    maxLength: 10,
+    minSegments: 8,
+    maxSegments: 2048,
+};

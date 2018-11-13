@@ -1,10 +1,11 @@
 import Point from './Point';
+import { PI_2 } from '../const';
 
 /**
  * The PixiJS Matrix class as an object, which makes it a lot faster,
  * here is a representation of it :
- * | a | b | tx|
- * | c | d | ty|
+ * | a | c | tx|
+ * | b | d | ty|
  * | 0 | 0 | 1 |
  *
  * @class
@@ -13,8 +14,8 @@ import Point from './Point';
 export default class Matrix {
     /**
      * @param {number} [a=1] - x scale
-     * @param {number} [b=0] - y skew
-     * @param {number} [c=0] - x skew
+     * @param {number} [b=0] - x skew
+     * @param {number} [c=0] - y skew
      * @param {number} [d=1] - y scale
      * @param {number} [tx=0] - x translation
      * @param {number} [ty=0] - y translation
@@ -348,6 +349,18 @@ export default class Matrix {
 
         this.tx = x + ((pivotX * a) + (pivotY * c));
         this.ty = y + ((pivotX * b) + (pivotY * d));
+        return this;
+    }
+    // setTransform处理合并时，保留俩者（pixijs库下和xesdog库上）
+    setTransform(x, y, pivotX, pivotY, scaleX, scaleY, rotation, skewX, skewY)
+    {
+        this.a = Math.cos(rotation + skewY) * scaleX;
+        this.b = Math.sin(rotation + skewY) * scaleX;
+        this.c = -Math.sin(rotation - skewX) * scaleY;
+        this.d = Math.cos(rotation - skewX) * scaleY;
+
+        this.tx = x - ((pivotX * this.a) + (pivotY * this.c));
+        this.ty = y - ((pivotX * this.b) + (pivotY * this.d));
 
         return this;
     }
@@ -395,7 +408,10 @@ export default class Matrix {
 
         const delta = Math.abs(skewX + skewY);
 
-        if (delta < 0.00001) {
+        //   合并处理来自xesdog的调整
+        //  if (delta < 0.00001) {
+        if (delta < 0.00001 || Math.abs(PI_2 - delta) < 0.00001)
+        {
             transform.rotation = skewY;
 
             if (a < 0 && d >= 0) {
@@ -404,7 +420,10 @@ export default class Matrix {
 
             transform.skew.x = transform.skew.y = 0;
         }
-        else {
+       // else { 合并处理
+        else
+        {
+            transform.rotation = 0;
             transform.skew.x = skewX;
             transform.skew.y = skewY;
         }

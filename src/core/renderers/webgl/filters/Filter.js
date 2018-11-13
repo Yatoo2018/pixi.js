@@ -60,7 +60,7 @@ export default class Filter
         // TODO we could cache this!
         this.glShaders = {};
 
-        // used for cacheing.. sure there is a better way!
+        // used for caching.. sure there is a better way!
         if (!SOURCE_KEY_MAP[this.vertexSrc + this.fragmentSrc])
         {
             SOURCE_KEY_MAP[this.vertexSrc + this.fragmentSrc] = uid();
@@ -83,7 +83,7 @@ export default class Filter
          *
          * @member {number}
          */
-        this.resolution = settings.RESOLUTION;
+        this.resolution = settings.FILTER_RESOLUTION;
 
         /**
          * If enabled is true the filter is applied, if false it will not.

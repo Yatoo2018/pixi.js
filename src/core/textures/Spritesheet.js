@@ -5,6 +5,23 @@ import { getResolutionOfUrl } from '../utils';
  * Utility class for maintaining reference to a collection
  * of Textures on a single Spritesheet.
  *
+ * To access a sprite sheet from your code pass its JSON data file to Pixi's loader:
+ *
+ * ```js
+ * PIXI.loader.add("images/spritesheet.json").load(setup);
+ *
+ * function setup() {
+ *   let sheet = PIXI.loader.resources["images/spritesheet.json"].spritesheet;
+ *   ...
+ * }
+ * ```
+ * With the `sheet.textures` you can create Sprite objects,`sheet.animations` can be used to create an AnimatedSprite.
+ *
+ * Sprite sheets can be packed using tools like {@link https://codeandweb.com/texturepacker|TexturePacker},
+ * {@link https://renderhjs.net/shoebox/|Shoebox} or {@link https://github.com/krzysztof-o/spritesheet.js|Spritesheet.js}.
+ * Default anchor points (see {@link PIXI.Texture#defaultAnchor}) and grouping of animation sprites are currently only
+ * supported by TexturePacker.
+ *
  * @class
  * @memberof PIXI
  */
@@ -37,10 +54,24 @@ export default class Spritesheet
         this.baseTexture = baseTexture;
 
         /**
-         * Map of spritesheet textures.
-         * @type {Object}
+         * A map containing all textures of the sprite sheet.
+         * Can be used to create a {@link PIXI.Sprite|Sprite}:
+         * ```js
+         * new PIXI.Sprite(sheet.textures["image.png"]);
+         * ```
+         * @member {Object}
          */
         this.textures = {};
+
+        /**
+         * A map containing the textures for each animation.
+         * Can be used to create an {@link PIXI.extras.AnimatedSprite|AnimatedSprite}:
+         * ```js
+         * new PIXI.extras.AnimatedSprite(sheet.animations["anim_name"])
+         * ```
+         * @member {Object}
+         */
+        this.animations = {};
 
         /**
          * Reference to the original JSON data.
@@ -133,6 +164,7 @@ export default class Spritesheet
         if (this._frameKeys.length <= Spritesheet.BATCH_SIZE)
         {
             this._processFrames(0);
+            this._processAnimations();
             this._parseComplete();
         }
         else
@@ -156,20 +188,24 @@ export default class Spritesheet
         while (frameIndex - initialFrameIndex < maxFrames && frameIndex < this._frameKeys.length)
         {
             const i = this._frameKeys[frameIndex];
-            const rect = this._frames[i].frame;
+            const data = this._frames[i];
+            const rect = data.frame;
 
             if (rect)
             {
                 let frame = null;
                 let trim = null;
+                const sourceSize = data.trimmed !== false && data.sourceSize
+                    ? data.sourceSize : data.frame;
+
                 const orig = new Rectangle(
                     0,
                     0,
-                    Math.floor(this._frames[i].sourceSize.w * sourceScale) / this.resolution,
-                    Math.floor(this._frames[i].sourceSize.h * sourceScale) / this.resolution
+                    Math.floor(sourceSize.w * sourceScale) / this.resolution,
+                    Math.floor(sourceSize.h * sourceScale) / this.resolution
                 );
 
-                if (this._frames[i].rotated)
+                if (data.rotated)
                 {
                     frame = new Rectangle(
                         Math.floor(rect.x * sourceScale) / this.resolution,
@@ -189,11 +225,11 @@ export default class Spritesheet
                 }
 
                 //  Check to see if the sprite is trimmed
-                if (this._frames[i].trimmed)
+                if (data.trimmed !== false && data.spriteSourceSize)
                 {
                     trim = new Rectangle(
-                        Math.floor(this._frames[i].spriteSourceSize.x * sourceScale) / this.resolution,
-                        Math.floor(this._frames[i].spriteSourceSize.y * sourceScale) / this.resolution,
+                        Math.floor(data.spriteSourceSize.x * sourceScale) / this.resolution,
+                        Math.floor(data.spriteSourceSize.y * sourceScale) / this.resolution,
                         Math.floor(rect.w * sourceScale) / this.resolution,
                         Math.floor(rect.h * sourceScale) / this.resolution
                     );
@@ -204,7 +240,8 @@ export default class Spritesheet
                     frame,
                     orig,
                     trim,
-                    this._frames[i].rotated ? 2 : 0
+                    data.rotated ? 2 : 0,
+                    data.anchor
                 );
 
                 // lets also add the frame to pixi's global cache for fromFrame and fromImage functions
@@ -212,6 +249,25 @@ export default class Spritesheet
             }
 
             frameIndex++;
+        }
+    }
+
+    /**
+     * Parse animations config
+     *
+     * @private
+     */
+    _processAnimations()
+    {
+        const animations = this.data.animations || {};
+
+        for (const animName in animations)
+        {
+            this.animations[animName] = [];
+            for (const frameName of animations[animName])
+            {
+                this.animations[animName].push(this.textures[frameName]);
+            }
         }
     }
 
@@ -246,6 +302,7 @@ export default class Spritesheet
             }
             else
             {
+                this._processAnimations();
                 this._parseComplete();
             }
         }, 0);
