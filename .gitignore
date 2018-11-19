@@ -32,3 +32,10 @@ node_modules
 # jetBrains IDE ignores
 .idea
 /sample
+
+# vscode editor ignores
+.vscode
+
+
+# local backup files
+*.rs.bak
